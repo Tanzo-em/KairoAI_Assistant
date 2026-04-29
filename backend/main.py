@@ -2,7 +2,7 @@ import os
 import asyncio
 from dotenv import load_dotenv
 from loguru import logger
-
+from tools.wake_word import WakeWordProcessor
 from pipecat.pipeline.pipeline import Pipeline
 from pipecat.pipeline.task import PipelineTask, PipelineParams
 from pipecat.pipeline.runner import PipelineRunner
@@ -17,13 +17,17 @@ from pipecat.processors.aggregators.llm_response_universal import (
     LLMContextAggregatorPair,
     LLMUserAggregatorParams,
 )
-
+from pipecat.frames.frames import Frame, TranscriptionFrame, TTSTextFrame
+from pipecat.processors.frame_processor import FrameProcessor, FrameDirection
 from pipecat.transports.local.audio import LocalAudioTransport, LocalAudioTransportParams
-
+from tools.media_control import MediaCommandProcessor
 load_dotenv()
 
 
+
 async def main():
+    wake_processor = WakeWordProcessor()
+    media_processor = MediaCommandProcessor()
     logger.info("Starting kairo Assistant")
 
     # STT
@@ -41,7 +45,10 @@ async def main():
         api_key=os.getenv("OPENAI_API_KEY"),
         settings=OpenAIResponsesLLMService.Settings(
             model="gpt-4.1-mini",
-            system_instruction="You are Kairo, a fast voice assistant. Keep answers short and clear.",
+            system_instruction="""YYou are Echo, the user's personal voice assistant.
+            Your wake name is Echo.
+            When the user asks your name or wake word, say: My wake word is Echo.
+            Reply shortly and naturally.""",
         ),
     )
 
@@ -67,6 +74,8 @@ async def main():
     pipeline = Pipeline([
         transport.input(),
         stt,
+        wake_processor,
+        media_processor,
         user_agg,
         llm,
         tts,
