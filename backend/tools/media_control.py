@@ -5,7 +5,8 @@ from loguru import logger
 from loguru import logger
 from pipecat.frames.frames import Frame, TranscriptionFrame, TTSTextFrame
 from pipecat.processors.frame_processor import FrameProcessor, FrameDirection
-
+from tools.ui_state import set_ui_status
+from tools.web_search import ask_with_web_search
 
 def open_url(url: str):
     try:
@@ -64,6 +65,8 @@ def play_spotify(query: str) -> str:
 
 def handle_media_command(user_text: str):
     text = user_text.lower().strip()
+    if any(word in text for word in ["news", "weather", "today", "latest", "current"]):
+        return ask_with_web_search(text)
 
     if "youtube" in text:
         query = text
@@ -88,7 +91,7 @@ class MediaCommandProcessor(FrameProcessor):
 
             if local_reply:
                 logger.info(f"MEDIA COMMAND: {frame.text} -> {local_reply}")
-
+                await set_ui_status("playing", frame.text)
                 await self.push_frame(
                     TTSTextFrame(
                         text=local_reply,

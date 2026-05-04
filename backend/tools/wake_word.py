@@ -1,6 +1,7 @@
 import time
 import re
 from loguru import logger
+from tools.ui_state import set_ui_status
 
 from pipecat.frames.frames import Frame, TranscriptionFrame
 from pipecat.processors.frame_processor import FrameProcessor, FrameDirection
@@ -48,13 +49,13 @@ class WakeWordProcessor(FrameProcessor):
         if isinstance(frame, TranscriptionFrame):
             original_text = frame.text.strip()
             cleaned_text = self.clean_text(original_text)
-
             logger.info(f"HEARD RAW: {original_text}")
             logger.info(f"HEARD CLEAN: {cleaned_text}")
 
             if self.is_timeout():
                 self.awake = False
                 logger.info("ECHO BACK TO SLEEP AFTER 30 SECONDS")
+                await set_ui_status("sleeping", "Echo is sleeping")
 
             wake = self.is_wake_word_detected(cleaned_text)
 
@@ -65,6 +66,7 @@ class WakeWordProcessor(FrameProcessor):
                     return
 
                 logger.info(f"WAKE WORD DETECTED: {wake}")
+                await set_ui_status("listening", "Echo is listening")
                 self.awake = True
                 self.last_command_time = time.time()
 

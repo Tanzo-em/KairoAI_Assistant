@@ -21,6 +21,7 @@ from pipecat.frames.frames import Frame, TranscriptionFrame, TTSTextFrame
 from pipecat.processors.frame_processor import FrameProcessor, FrameDirection
 from pipecat.transports.local.audio import LocalAudioTransport, LocalAudioTransportParams
 from tools.media_control import MediaCommandProcessor
+from tools.ui_state import start_ui_server, set_ui_status
 load_dotenv()
 
 
@@ -29,6 +30,9 @@ async def main():
     wake_processor = WakeWordProcessor()
     media_processor = MediaCommandProcessor()
     logger.info("Starting kairo Assistant")
+
+    await start_ui_server()
+    await set_ui_status("sleeping", "Say Echo to wake me")
 
     # STT
     stt = DeepgramSTTService(api_key=os.getenv("DEEPGRAM_API_KEY"))
