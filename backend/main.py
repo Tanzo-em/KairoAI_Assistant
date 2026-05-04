@@ -49,7 +49,7 @@ async def main():
         api_key=os.getenv("OPENAI_API_KEY"),
         settings=OpenAIResponsesLLMService.Settings(
             model="gpt-4.1-mini",
-            system_instruction="""YYou are Echo, the user's personal voice assistant.
+            system_instruction="""You are Echo, the user's personal voice assistant.
             Your wake name is Echo.
             When the user asks your name or wake word, say: My wake word is Echo.
             Reply shortly and naturally.""",
