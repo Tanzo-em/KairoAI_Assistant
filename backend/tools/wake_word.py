@@ -2,6 +2,7 @@ import time
 import re
 from loguru import logger
 from tools.ui_state import set_ui_status
+from tools.wake_state import consume_if_awake, sleep_now
 
 from pipecat.frames.frames import Frame, TranscriptionFrame
 from pipecat.processors.frame_processor import FrameProcessor, FrameDirection
@@ -15,30 +16,11 @@ class WakeWordProcessor(FrameProcessor):
         self.last_command_time = 0
         self.sleep_timeout_sec = 30
 
-        # Add all possible words Deepgram may hear
-        self.wake_words = [
-            "echo",
-            "hey echo",
-            "hello echo",
-            "ok echo",
-            "he echo"
-
-        ]
-
     def clean_text(self, text: str) -> str:
         text = text.lower()
         text = re.sub(r"[^a-z0-9\s]", "", text)
         text = re.sub(r"\s+", " ", text)
         return text.strip()
-
-    def is_wake_word_detected(self, text: str):
-        for wake in self.wake_words:
-            if wake in text:
-                return wake
-        return None
-
-    def remove_wake_word(self, text: str, wake: str):
-        return text.replace(wake, "", 1).strip()
 
     def is_timeout(self):
         return self.awake and (time.time() - self.last_command_time > self.sleep_timeout_sec)
@@ -49,44 +31,69 @@ class WakeWordProcessor(FrameProcessor):
         if isinstance(frame, TranscriptionFrame):
             original_text = frame.text.strip()
             cleaned_text = self.clean_text(original_text)
+
             logger.info(f"HEARD RAW: {original_text}")
             logger.info(f"HEARD CLEAN: {cleaned_text}")
 
             if self.is_timeout():
                 self.awake = False
+                sleep_now()
                 logger.info("ECHO BACK TO SLEEP AFTER 30 SECONDS")
                 await set_ui_status("sleeping", "Echo is sleeping")
+                return
 
-            wake = self.is_wake_word_detected(cleaned_text)
-
-            # Sleeping mode
-            if not self.awake:
-                if not wake:
-                    logger.debug(f"SLEEPING. IGNORED: {original_text}")
-                    return
-
-                logger.info(f"WAKE WORD DETECTED: {wake}")
-                await set_ui_status("listening", "Echo is listening")
+            if consume_if_awake():
                 self.awake = True
-                self.last_command_time = time.time()
 
-                command_text = self.remove_wake_word(cleaned_text, wake)
+            # Fallback wake detection from Deepgram if Porcupine did not detect
+            fallback_wake_words = [
+                "echo",
+                "hey echo",
+                "hello echo",
+                "ok echo",
+                "okay echo",
+                "he echo",
+                "the echo",
+            ]
 
-                if command_text:
-                    logger.info(f"COMMAND WITH WAKE WORD: {command_text}")
+            fallback_wake = any(w in cleaned_text for w in fallback_wake_words)
+
+            if not self.awake:
+                if fallback_wake:
+                    logger.info(f"STT FALLBACK WAKE DETECTED: {cleaned_text}")
+                    self.awake = True
+                    self.last_command_time = time.time()
+                    await set_ui_status("listening", "Echo is listening")
+
+                    # If user only said wake word, wait for next command
+                    command_text = cleaned_text
+                    for w in fallback_wake_words:
+                        command_text = command_text.replace(w, "", 1).strip()
+
+                    if not command_text:
+                        logger.info("ECHO IS AWAKE. WAITING FOR COMMAND.")
+                        return
+
                     frame.text = command_text
+                    logger.info(f"COMMAND WITH FALLBACK WAKE: {command_text}")
                     await self.push_frame(frame, direction)
                     return
 
-                logger.info("ECHO IS AWAKE. WAITING FOR COMMAND.")
+                logger.debug(f"WAITING FOR PORCUPINE WAKE. IGNORED: {original_text}")
                 return
 
-            # Awake mode
+            if not cleaned_text:
+                return
+
+            # Avoid sending the wake word itself as the command.
+            if cleaned_text in ["echo", "hey echo", "hello echo", "ok echo", "okay echo"]:
+                logger.debug("IGNORED WAKE WORD TEXT FROM STT")
+                return
+
             self.last_command_time = time.time()
-            logger.info(f"COMMAND RECEIVED: {original_text}")
+            logger.info(f"COMMAND RECEIVED AFTER PORCUPINE WAKE: {original_text}")
+
             await self.push_frame(frame, direction)
             return
 
         await self.push_frame(frame, direction)
-
-        
