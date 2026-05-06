@@ -4,7 +4,7 @@ from loguru import logger
 from tools.ui_state import set_ui_status
 from tools.wake_state import consume_if_awake, sleep_now
 
-from pipecat.frames.frames import Frame, TranscriptionFrame
+from pipecat.frames.frames import Frame, TranscriptionFrame, TTSTextFrame
 from pipecat.processors.frame_processor import FrameProcessor, FrameDirection
 
 
@@ -25,6 +25,25 @@ class WakeWordProcessor(FrameProcessor):
     def is_timeout(self):
         return self.awake and (time.time() - self.last_command_time > self.sleep_timeout_sec)
 
+    def parse_wake_and_command(self, text: str):
+        fallback_wake_words = [
+            "echo",
+            "hey echo",
+            "hello echo",
+            "ok echo",
+            "okay echo",
+            "he echo",
+            "the echo",
+        ]
+
+        for wake in fallback_wake_words:
+            if text == wake:
+                return wake, ""
+            if text.startswith(wake + " "):
+                return wake, text[len(wake) :].strip()
+
+        return None, text
+
     async def process_frame(self, frame: Frame, direction: FrameDirection):
         await super().process_frame(frame, direction)
 
@@ -44,34 +63,47 @@ class WakeWordProcessor(FrameProcessor):
 
             if consume_if_awake():
                 self.awake = True
+                self.last_command_time = time.time()
 
-            # Fallback wake detection from Deepgram if Porcupine did not detect
-            fallback_wake_words = [
-                "echo",
-                "hey echo",
-                "hello echo",
-                "ok echo",
-                "okay echo",
-                "he echo",
-                "the echo",
-            ]
+                wake, command_text = self.parse_wake_and_command(cleaned_text)
+                if wake:
+                    if not command_text:
+                        logger.info("ECHO IS AWAKE. SAYING GREETING AND WAITING FOR COMMAND.")
+                        await self.push_frame(
+                            TTSTextFrame(
+                                text="Hello! How can I help today?",
+                                aggregated_by="wake_greeting",
+                            ),
+                            direction,
+                        )
+                        return
 
-            fallback_wake = any(w in cleaned_text for w in fallback_wake_words)
+                    frame.text = command_text
+                    logger.info(f"COMMAND AFTER PORCUPINE WAKE WITH WAKE WORD: {command_text}")
+                    await self.push_frame(frame, direction)
+                    return
 
+                logger.info(f"COMMAND RECEIVED AFTER PORCUPINE WAKE: {original_text}")
+                await self.push_frame(frame, direction)
+                return
+
+            wake, command_text = self.parse_wake_and_command(cleaned_text)
             if not self.awake:
-                if fallback_wake:
+                if wake:
                     logger.info(f"STT FALLBACK WAKE DETECTED: {cleaned_text}")
                     self.awake = True
                     self.last_command_time = time.time()
                     await set_ui_status("listening", "Echo is listening")
 
-                    # If user only said wake word, wait for next command
-                    command_text = cleaned_text
-                    for w in fallback_wake_words:
-                        command_text = command_text.replace(w, "", 1).strip()
-
                     if not command_text:
-                        logger.info("ECHO IS AWAKE. WAITING FOR COMMAND.")
+                        logger.info("ECHO IS AWAKE. SAYING GREETING AND WAITING FOR COMMAND.")
+                        await self.push_frame(
+                            TTSTextFrame(
+                                text="Hello! How can I help today?",
+                                aggregated_by="wake_greeting",
+                            ),
+                            direction,
+                        )
                         return
 
                     frame.text = command_text
@@ -85,8 +117,8 @@ class WakeWordProcessor(FrameProcessor):
             if not cleaned_text:
                 return
 
-            # Avoid sending the wake word itself as the command.
-            if cleaned_text in ["echo", "hey echo", "hello echo", "ok echo", "okay echo"]:
+            wake, command_text = self.parse_wake_and_command(cleaned_text)
+            if wake and not command_text:
                 logger.debug("IGNORED WAKE WORD TEXT FROM STT")
                 return
 

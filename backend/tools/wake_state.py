@@ -21,6 +21,7 @@ def consume_if_awake() -> bool:
         porcupine_awake = False
         return False
 
+    porcupine_awake = False
     return True
 
 
