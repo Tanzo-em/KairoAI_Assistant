@@ -17,13 +17,15 @@ class WakeWordProcessor(FrameProcessor):
 
         # Add all possible words Deepgram may hear
         self.wake_words = [
-            "echo",
             "hey echo",
             "hello echo",
             "ok echo",
-            "he echo"
-
+            "he echo",
+            "echo",
         ]
+
+        # Latency tracking
+        self.last_wake_time = 0
 
     def clean_text(self, text: str) -> str:
         text = text.lower()
@@ -65,10 +67,14 @@ class WakeWordProcessor(FrameProcessor):
                     logger.debug(f"SLEEPING. IGNORED: {original_text}")
                     return
 
-                logger.info(f"WAKE WORD DETECTED: {wake}")
+                # Calculate wake word detection latency
+                detection_time = time.time()
+                latency = detection_time - self.last_wake_time if self.last_wake_time > 0 else 0
+                logger.info(f"WAKE WORD DETECTED: {wake} (latency: {latency:.2f}s)")
                 await set_ui_status("listening", "Echo is listening")
                 self.awake = True
                 self.last_command_time = time.time()
+                self.last_wake_time = detection_time
 
                 command_text = self.remove_wake_word(cleaned_text, wake)
 

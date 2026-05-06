@@ -52,7 +52,7 @@ async def main():
     llm = OpenAIResponsesLLMService(
         api_key=os.getenv("OPENAI_API_KEY"),
         settings=OpenAIResponsesLLMService.Settings(
-            model="gpt-4.1-mini",
+            model="gpt-4o-mini",
             system_instruction="""You are Echo, the user's personal voice assistant.
             Your wake name is Echo.
             When the user asks your name or wake word, say: My wake word is Echo.
@@ -76,6 +76,7 @@ async def main():
         audio_out_enabled=True,
         audio_out_sample_rate=24000,
         audio_in_sample_rate=16000,
+        audio_in_device=6,  # PulseAudio device
     )
 )
 
