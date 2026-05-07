@@ -43,18 +43,7 @@ async def main():
     await set_ui_status("sleeping", "Say Echo to wake me")
 
     # STT
-    deepgram_model = os.getenv("DEEPGRAM_STT_MODEL", "nova-3-general")
-    stt = DeepgramSTTService(
-        api_key=os.getenv("DEEPGRAM_API_KEY"),
-        settings=DeepgramSTTService.Settings(
-            model=deepgram_model,
-            language="en",
-            interim_results=True,
-            utterance_end_ms=400,
-            punctuate=True,
-            profanity_filter=False,
-        ),
-    )
+    stt = DeepgramSTTService(api_key=os.getenv("DEEPGRAM_API_KEY"))
 
     # TTS
     tts = OpenAITTSService(
@@ -110,7 +99,7 @@ async def main():
         audio_out_enabled=True,
         audio_out_sample_rate=24000,
         audio_in_sample_rate=16000,
-        audio_in_device=6,  # PulseAudio device
+        audio_in_device=1,  # Microphone device
     )
 )
 

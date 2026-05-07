@@ -3,3 +3,20 @@ timestamp,stage,type,value
 2026-05-06 16:38:51,post-tts,e2e_latency,0.072
 2026-05-06 16:38:56,post-tts,e2e_latency,0.019
 2026-05-06 16:38:56,post-tts,e2e_latency,0.023
+2026-05-07 17:48:39,post-tts,e2e_latency,0.973,latency,
+2026-05-07 17:48:48,post-tts,e2e_latency,3.336,latency,
+2026-05-07 17:48:55,post-llm,llm_response_start,,llm,response_start
+2026-05-07 17:48:55,post-tts,llm_response_start,,llm,response_start
+2026-05-07 17:48:57,post-llm,llm_text_delta,,llm,Sure
+2026-05-07 17:48:57,post-llm,llm_text_delta,,llm,!
+2026-05-07 17:48:57,post-llm,llm_text_delta,,llm, What
+2026-05-07 17:48:57,post-llm,llm_text_delta,,llm, would
+2026-05-07 17:48:57,post-tts,e2e_latency,0.092,latency,
+2026-05-07 17:48:57,post-llm,llm_text_delta,,llm, you
+2026-05-07 17:48:57,post-llm,llm_text_delta,,llm, like
+2026-05-07 17:48:57,post-llm,llm_text_delta,,llm, to
+2026-05-07 17:48:57,post-llm,llm_text_delta,,llm, know
+2026-05-07 17:48:57,post-llm,llm_text_delta,,llm, more
+2026-05-07 17:48:57,post-llm,llm_text_delta,,llm, about
+2026-05-07 17:48:57,post-llm,llm_text_delta,,llm,?
+2026-05-07 17:48:57,post-llm,llm_response_end,,llm,response_end
