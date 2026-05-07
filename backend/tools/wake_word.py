@@ -51,13 +51,13 @@ class WakeWordProcessor(FrameProcessor):
             original_text = frame.text.strip()
             cleaned_text = self.clean_text(original_text)
 
-            logger.info(f"HEARD RAW: {original_text}")
-            logger.info(f"HEARD CLEAN: {cleaned_text}")
+            logger.debug(f"HEARD RAW: {original_text}")
+            logger.debug(f"HEARD CLEAN: {cleaned_text}")
 
             if self.is_timeout():
                 self.awake = False
                 sleep_now()
-                logger.info("ECHO BACK TO SLEEP AFTER 30 SECONDS")
+                logger.debug("ECHO BACK TO SLEEP AFTER 30 SECONDS")
                 await set_ui_status("sleeping", "Echo is sleeping")
                 return
 
@@ -68,7 +68,7 @@ class WakeWordProcessor(FrameProcessor):
                 wake, command_text = self.parse_wake_and_command(cleaned_text)
                 if wake:
                     if not command_text:
-                        logger.info("ECHO IS AWAKE. SAYING GREETING AND WAITING FOR COMMAND.")
+                        logger.debug("ECHO IS AWAKE. SAYING GREETING AND WAITING FOR COMMAND.")
                         await self.push_frame(
                             TTSTextFrame(
                                 text="Hello! How can I help today?",
@@ -79,24 +79,24 @@ class WakeWordProcessor(FrameProcessor):
                         return
 
                     frame.text = command_text
-                    logger.info(f"COMMAND AFTER PORCUPINE WAKE WITH WAKE WORD: {command_text}")
+                    logger.debug(f"COMMAND AFTER PORCUPINE WAKE WITH WAKE WORD: {command_text}")
                     await self.push_frame(frame, direction)
                     return
 
-                logger.info(f"COMMAND RECEIVED AFTER PORCUPINE WAKE: {original_text}")
+                logger.debug(f"COMMAND RECEIVED AFTER PORCUPINE WAKE: {original_text}")
                 await self.push_frame(frame, direction)
                 return
 
             wake, command_text = self.parse_wake_and_command(cleaned_text)
             if not self.awake:
                 if wake:
-                    logger.info(f"STT FALLBACK WAKE DETECTED: {cleaned_text}")
+                    logger.debug(f"STT FALLBACK WAKE DETECTED: {cleaned_text}")
                     self.awake = True
                     self.last_command_time = time.time()
                     await set_ui_status("listening", "Echo is listening")
 
                     if not command_text:
-                        logger.info("ECHO IS AWAKE. SAYING GREETING AND WAITING FOR COMMAND.")
+                        logger.debug("ECHO IS AWAKE. SAYING GREETING AND WAITING FOR COMMAND.")
                         await self.push_frame(
                             TTSTextFrame(
                                 text="Hello! How can I help today?",
@@ -107,7 +107,7 @@ class WakeWordProcessor(FrameProcessor):
                         return
 
                     frame.text = command_text
-                    logger.info(f"COMMAND WITH FALLBACK WAKE: {command_text}")
+                    logger.debug(f"COMMAND WITH FALLBACK WAKE: {command_text}")
                     await self.push_frame(frame, direction)
                     return
 
@@ -123,7 +123,7 @@ class WakeWordProcessor(FrameProcessor):
                 return
 
             self.last_command_time = time.time()
-            logger.info(f"COMMAND RECEIVED AFTER PORCUPINE WAKE: {original_text}")
+            logger.debug(f"COMMAND RECEIVED AFTER PORCUPINE WAKE: {original_text}")
 
             await self.push_frame(frame, direction)
             return

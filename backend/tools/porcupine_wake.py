@@ -30,7 +30,7 @@ class PorcupineWakeListener:
 
         self._thread = threading.Thread(target=self._run, daemon=True)
         self._thread.start()
-        logger.info("Porcupine wake listener started")
+        logger.debug("Porcupine wake listener started")
 
     def stop(self):
         self._stop.set()
@@ -38,7 +38,7 @@ class PorcupineWakeListener:
     def _run(self):
         try:
             if self.keyword_path and os.path.exists(self.keyword_path):
-                logger.info(f"Using custom Porcupine keyword: {self.keyword_path}")
+                logger.debug(f"Using custom Porcupine keyword: {self.keyword_path}")
                 self.porcupine = pvporcupine.create(
                     access_key=self.access_key,
                     keyword_paths=[self.keyword_path],
@@ -62,7 +62,7 @@ class PorcupineWakeListener:
                 frames_per_buffer=self.porcupine.frame_length,
             )
 
-            logger.info(
+            logger.debug(
                 f"Porcupine ready. sample_rate={self.porcupine.sample_rate}, "
                 f"frame_length={self.porcupine.frame_length}"
             )
@@ -81,7 +81,7 @@ class PorcupineWakeListener:
                 keyword_index = self.porcupine.process(pcm)
 
                 if keyword_index >= 0:
-                    logger.info("PORCUPINE WAKE DETECTED")
+                    logger.debug("PORCUPINE WAKE DETECTED")
                     trigger_wake()
 
                     try:

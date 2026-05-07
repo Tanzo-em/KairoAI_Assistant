@@ -90,7 +90,7 @@ class MediaCommandProcessor(FrameProcessor):
             local_reply = handle_media_command(frame.text)
 
             if local_reply:
-                logger.info(f"MEDIA COMMAND: {frame.text} -> {local_reply}")
+                logger.debug(f"MEDIA COMMAND: {frame.text} -> {local_reply}")
                 await set_ui_status("playing", frame.text)
                 await self.push_frame(
                     TTSTextFrame(

@@ -2,6 +2,7 @@ import os
 import asyncio
 from dotenv import load_dotenv
 from loguru import logger
+from tools.latency_logger import LatencyLogger
 from tools.wake_word import WakeWordProcessor
 from pipecat.pipeline.pipeline import Pipeline
 from pipecat.pipeline.task import PipelineTask, PipelineParams
@@ -89,11 +90,14 @@ async def main():
     pipeline = Pipeline([
         transport.input(),
         stt,
+        LatencyLogger(stage_name="post-stt"),
         wake_processor,
         media_processor,
         user_agg,
         llm,
+        LatencyLogger(stage_name="post-llm"),
         tts,
+        LatencyLogger(stage_name="post-tts"),
         transport.output(),
         assistant_agg,
     ])
