@@ -28,13 +28,25 @@ from pipecat.transports.local.audio import LocalAudioTransport, LocalAudioTransp
 from tools.media_control import MediaCommandProcessor
 from tools.ui_state import start_ui_server, set_ui_status
 from tools.porcupine_wake import PorcupineWakeListener
+from tools.audio_guard import remember_bot_tts
 load_dotenv()
 
+
+
+class BotTTSMemoryProcessor(FrameProcessor):
+    async def process_frame(self, frame: Frame, direction: FrameDirection):
+        await super().process_frame(frame, direction)
+
+        if isinstance(frame, TTSTextFrame):
+            remember_bot_tts(frame.text)
+
+        await self.push_frame(frame, direction)
 
 
 async def main():
     wake_processor = WakeWordProcessor()
     media_processor = MediaCommandProcessor()
+    bot_tts_memory = BotTTSMemoryProcessor()
     logger.debug("Starting kairo Assistant")
     porcupine_listener = PorcupineWakeListener()
     porcupine_listener.start()
@@ -113,6 +125,7 @@ async def main():
         llm,
         LatencyLogger(stage_name="post-llm"),
         tts,
+        bot_tts_memory,
         LatencyLogger(stage_name="post-tts"),
         transport.output(),
         assistant_agg,
@@ -120,7 +133,9 @@ async def main():
 
     task = PipelineTask(
         pipeline,
-        params=PipelineParams(),
+        params=PipelineParams(
+            allow_interruptions=False,
+        ),
     )
 
     runner = PipelineRunner()

@@ -20,3 +20,39 @@ timestamp,stage,type,value
 2026-05-07 17:48:57,post-llm,llm_text_delta,,llm, about
 2026-05-07 17:48:57,post-llm,llm_text_delta,,llm,?
 2026-05-07 17:48:57,post-llm,llm_response_end,,llm,response_end
+2026-05-08 11:35:52,post-tts,e2e_latency,0.431,latency,
+2026-05-08 11:35:53,post-llm,llm_response_start,,llm,response_start
+2026-05-08 11:35:55,post-tts,llm_response_start,,llm,response_start
+2026-05-08 11:35:55,post-llm,llm_text_delta,,llm,Sure
+2026-05-08 11:35:55,post-llm,llm_text_delta,,llm,!
+2026-05-08 11:35:55,post-llm,llm_text_delta,,llm, What
+2026-05-08 11:35:55,post-llm,llm_text_delta,,llm, would
+2026-05-08 11:35:55,post-llm,llm_text_delta,,llm, you
+2026-05-08 11:35:55,post-llm,llm_text_delta,,llm, like
+2026-05-08 11:35:55,post-llm,llm_text_delta,,llm, to
+2026-05-08 11:35:55,post-llm,llm_text_delta,,llm, break
+2026-05-08 11:35:55,post-llm,llm_text_delta,,llm, down
+2026-05-08 11:35:55,post-llm,llm_text_delta,,llm,?
+2026-05-08 11:35:55,post-llm,llm_response_end,,llm,response_end
+2026-05-08 11:35:56,post-llm,llm_response_start,,llm,response_start
+2026-05-08 11:35:56,post-tts,llm_response_start,,llm,response_start
+2026-05-08 11:35:57,post-llm,llm_response_end,,llm,response_end
+2026-05-08 11:35:57,post-tts,llm_response_end,,llm,response_end
+2026-05-08 11:35:57,post-llm,llm_response_start,,llm,response_start
+2026-05-08 11:35:57,post-tts,llm_response_start,,llm,response_start
+2026-05-08 11:35:58,post-llm,llm_text_delta,,llm,Hi
+2026-05-08 11:35:58,post-llm,llm_text_delta,,llm, there
+2026-05-08 11:35:58,post-llm,llm_text_delta,,llm,!
+2026-05-08 11:35:58,post-llm,llm_text_delta,,llm, What
+2026-05-08 11:35:58,post-tts,e2e_latency,0.018,latency,
+2026-05-08 11:35:58,post-llm,llm_text_delta,,llm,’s
+2026-05-08 11:35:58,post-llm,llm_text_delta,,llm, on
+2026-05-08 11:35:58,post-llm,llm_text_delta,,llm, your
+2026-05-08 11:35:58,post-llm,llm_text_delta,,llm, mind
+2026-05-08 11:35:58,post-llm,llm_text_delta,,llm,?
+2026-05-08 11:35:58,post-llm,llm_response_end,,llm,response_end
+2026-05-08 11:36:15,post-llm,llm_response_start,,llm,response_start
+2026-05-08 11:36:15,post-tts,llm_response_start,,llm,response_start
+2026-05-08 11:36:15,post-llm,llm_response_end,,llm,response_end
+2026-05-08 11:36:15,post-tts,llm_response_end,,llm,response_end
+2026-05-08 11:36:39,post-tts,e2e_latency,8.296,latency,

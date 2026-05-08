@@ -3,7 +3,7 @@ import re
 from loguru import logger
 from tools.ui_state import set_ui_status
 from tools.wake_state import consume_if_awake, sleep_now
-
+from tools.audio_guard import is_probably_bot_echo
 from pipecat.frames.frames import Frame, TranscriptionFrame, TTSTextFrame
 from pipecat.processors.frame_processor import FrameProcessor, FrameDirection
 
@@ -53,6 +53,11 @@ class WakeWordProcessor(FrameProcessor):
 
             logger.debug(f"HEARD RAW: {original_text}")
             logger.debug(f"HEARD CLEAN: {cleaned_text}")
+
+
+            if is_probably_bot_echo(cleaned_text):
+                logger.debug(f"IGNORED BOT SPEAKER ECHO: {original_text}")
+                return
 
             if self.is_timeout():
                 self.awake = False
