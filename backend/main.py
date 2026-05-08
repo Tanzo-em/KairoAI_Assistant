@@ -47,7 +47,7 @@ async def main():
     wake_processor = WakeWordProcessor()
     media_processor = MediaCommandProcessor()
     bot_tts_memory = BotTTSMemoryProcessor()
-    logger.debug("Starting kairo Assistant")
+    logger.debug("Starting echo Assistant")
     porcupine_listener = PorcupineWakeListener()
     porcupine_listener.start()
 
