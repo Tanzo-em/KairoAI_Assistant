@@ -56,3 +56,74 @@ timestamp,stage,type,value
 2026-05-08 11:36:15,post-llm,llm_response_end,,llm,response_end
 2026-05-08 11:36:15,post-tts,llm_response_end,,llm,response_end
 2026-05-08 11:36:39,post-tts,e2e_latency,8.296,latency,
+2026-05-13 13:14:50,post-tts,e2e_latency,1.451,latency,
+2026-05-13 13:15:00,post-tts,e2e_latency,3.178,latency,
+2026-05-13 13:15:07,post-llm,llm_response_start,,llm,response_start
+2026-05-13 13:15:07,post-tts,llm_response_start,,llm,response_start
+2026-05-13 13:15:09,post-llm,llm_text_delta,,llm,What
+2026-05-13 13:15:09,post-llm,llm_text_delta,,llm, would
+2026-05-13 13:15:09,post-llm,llm_text_delta,,llm, you
+2026-05-13 13:15:09,post-llm,llm_text_delta,,llm, like
+2026-05-13 13:15:09,post-llm,llm_text_delta,,llm, to
+2026-05-13 13:15:09,post-llm,llm_text_delta,,llm, know
+2026-05-13 13:15:09,post-llm,llm_text_delta,,llm, about
+2026-05-13 13:15:09,post-llm,llm_text_delta,,llm," """
+2026-05-13 13:15:09,post-llm,llm_text_delta,,llm,new
+2026-05-13 13:15:09,post-llm,llm_text_delta,,llm,"""?"
+2026-05-13 13:15:09,post-llm,llm_response_end,,llm,response_end
+2026-05-13 13:15:09,post-llm,llm_response_start,,llm,response_start
+2026-05-13 13:15:09,post-tts,e2e_latency,0.041,latency,
+2026-05-13 13:15:10,post-llm,llm_text_delta,,llm,What
+2026-05-13 13:15:10,post-llm,llm_text_delta,,llm, would
+2026-05-13 13:15:10,post-llm,llm_text_delta,,llm, you
+2026-05-13 13:15:10,post-llm,llm_text_delta,,llm, like
+2026-05-13 13:15:10,post-llm,llm_text_delta,,llm, to
+2026-05-13 13:15:10,post-llm,llm_text_delta,,llm, know
+2026-05-13 13:15:10,post-llm,llm_text_delta,,llm,?
+2026-05-13 13:15:10,post-llm,llm_response_end,,llm,response_end
+2026-05-13 13:15:11,post-tts,llm_response_start,,llm,response_start
+2026-05-13 13:15:11,post-tts,llm_response_end,,llm,response_end
+2026-05-13 13:15:11,post-tts,e2e_latency,0.033,latency,
+2026-05-13 13:15:12,post-tts,llm_response_end,,llm,response_end
+2026-05-13 14:26:16,post-tts,e2e_latency,1.019,latency,
+2026-05-13 14:30:57,post-tts,e2e_latency,1.059,latency,
+2026-05-13 14:44:40,post-tts,e2e_latency,1.136,latency,
+2026-05-13 14:45:54,post-tts,e2e_latency,0.012,latency,
+2026-05-13 14:55:49,post-tts,e2e_latency,1.152,latency,
+2026-05-13 14:56:13,post-tts,e2e_latency,0.025,latency,
+2026-05-13 14:58:42,post-tts,e2e_latency,0.011,latency,
+2026-05-13 14:58:46,post-llm,llm_response_start,,llm,response_start
+2026-05-13 14:58:46,post-tts,llm_response_start,,llm,response_start
+2026-05-13 14:58:48,post-llm,llm_text_delta,,llm,Could
+2026-05-13 14:58:48,post-llm,llm_text_delta,,llm, you
+2026-05-13 14:58:48,post-llm,llm_text_delta,,llm, clarify
+2026-05-13 14:58:48,post-llm,llm_text_delta,,llm, what
+2026-05-13 14:58:48,post-llm,llm_text_delta,,llm, you'd
+2026-05-13 14:58:48,post-llm,llm_text_delta,,llm, like
+2026-05-13 14:58:48,post-llm,llm_text_delta,,llm, me
+2026-05-13 14:58:48,post-llm,llm_text_delta,,llm, to
+2026-05-13 14:58:48,post-llm,llm_text_delta,,llm, tell
+2026-05-13 14:58:48,post-llm,llm_text_delta,,llm, you
+2026-05-13 14:58:48,post-llm,llm_text_delta,,llm,?
+2026-05-13 14:58:48,post-llm,llm_response_end,,llm,response_end
+2026-05-13 14:58:48,post-tts,e2e_latency,0.009,latency,
+2026-05-13 14:58:49,post-tts,llm_response_end,,llm,response_end
+2026-05-13 14:59:07,post-tts,e2e_latency,0.035,latency,
+2026-05-13 15:05:19,post-tts,e2e_latency,0.011,latency,
+2026-05-13 15:05:32,post-llm,llm_response_start,,llm,response_start
+2026-05-13 15:05:32,post-tts,llm_response_start,,llm,response_start
+2026-05-13 15:05:32,post-llm,llm_response_end,,llm,response_end
+2026-05-13 15:05:32,post-tts,llm_response_end,,llm,response_end
+2026-05-13 15:05:32,post-llm,llm_response_start,,llm,response_start
+2026-05-13 15:05:32,post-tts,llm_response_start,,llm,response_start
+2026-05-13 15:05:33,post-llm,llm_text_delta,,llm,Two
+2026-05-13 15:05:33,post-llm,llm_text_delta,,llm, plus
+2026-05-13 15:05:33,post-llm,llm_text_delta,,llm, three
+2026-05-13 15:05:33,post-llm,llm_text_delta,,llm, equals
+2026-05-13 15:05:33,post-llm,llm_text_delta,,llm, five
+2026-05-13 15:05:33,post-llm,llm_text_delta,,llm,!
+2026-05-13 15:05:34,post-llm,llm_response_end,,llm,response_end
+2026-05-13 15:05:34,post-tts,e2e_latency,0.006,latency,
+2026-05-13 15:05:36,post-tts,llm_response_end,,llm,response_end
+2026-05-13 15:06:03,post-tts,e2e_latency,0.015,latency,
+2026-05-13 15:25:46,post-tts,e2e_latency,0.048,latency,

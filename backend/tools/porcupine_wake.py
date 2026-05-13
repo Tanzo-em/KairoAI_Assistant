@@ -22,6 +22,15 @@ class PorcupineWakeListener:
         self.porcupine = None
         self.pa = None
         self.stream = None
+        self._input_device_index = None
+        self._channels = 1
+
+        device_index = os.getenv("PORCUPINE_INPUT_DEVICE_INDEX")
+        if device_index is not None:
+            try:
+                self._input_device_index = int(device_index)
+            except ValueError:
+                logger.warning(f"Invalid PORCUPINE_INPUT_DEVICE_INDEX: {device_index}")
 
     def start(self):
         if not self.access_key:
@@ -54,17 +63,41 @@ class PorcupineWakeListener:
 
             self.pa = pyaudio.PyAudio()
 
-            self.stream = self.pa.open(
-                rate=self.porcupine.sample_rate,
-                channels=1,
-                format=pyaudio.paInt16,
-                input=True,
-                frames_per_buffer=self.porcupine.frame_length,
-            )
+            try:
+                self._channels = 1
+                self.stream = self.pa.open(
+                    rate=self.porcupine.sample_rate,
+                    channels=self._channels,
+                    format=pyaudio.paInt16,
+                    input=True,
+                    frames_per_buffer=self.porcupine.frame_length,
+                    input_device_index=self._input_device_index,
+                )
+            except Exception as e:
+                logger.warning(
+                    f"Porcupine could not open mono input stream: {e}. "
+                    "Trying stereo fallback."
+                )
+                self._channels = 2
+                try:
+                    self.stream = self.pa.open(
+                        rate=self.porcupine.sample_rate,
+                        channels=self._channels,
+                        format=pyaudio.paInt16,
+                        input=True,
+                        frames_per_buffer=self.porcupine.frame_length,
+                        input_device_index=self._input_device_index,
+                    )
+                except Exception as stereo_error:
+                    logger.exception(
+                        "Porcupine wake listener could not open an input stream. "
+                        f"Wake detection disabled: {stereo_error}"
+                    )
+                    return
 
             logger.debug(
                 f"Porcupine ready. sample_rate={self.porcupine.sample_rate}, "
-                f"frame_length={self.porcupine.frame_length}"
+                f"frame_length={self.porcupine.frame_length}, channels={self._channels}"
             )
 
             while not self._stop.is_set():
@@ -73,10 +106,17 @@ class PorcupineWakeListener:
                     exception_on_overflow=False,
                 )
 
-                pcm = struct.unpack_from(
-                    "h" * self.porcupine.frame_length,
-                    pcm,
-                )
+                if self._channels == 2:
+                    pcm = struct.unpack_from(
+                        "h" * self.porcupine.frame_length * 2,
+                        pcm,
+                    )
+                    pcm = pcm[::2]
+                else:
+                    pcm = struct.unpack_from(
+                        "h" * self.porcupine.frame_length,
+                        pcm,
+                    )
 
                 keyword_index = self.porcupine.process(pcm)
 

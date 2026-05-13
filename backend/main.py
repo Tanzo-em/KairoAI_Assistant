@@ -8,9 +8,9 @@ from pipecat.pipeline.pipeline import Pipeline
 from pipecat.pipeline.task import PipelineTask, PipelineParams
 from pipecat.pipeline.runner import PipelineRunner
 from pipecat.services.deepgram.stt import DeepgramSTTService
-from pipecat.services.openai.tts import OpenAITTSService
+from pipecat.services.piper.tts import PiperTTSService
 from pipecat.services.openai.responses.llm import OpenAIResponsesLLMService
-
+from pipecat.services.piper import PiperTTSService
 from pipecat.audio.vad.silero import SileroVADAnalyzer
 from pipecat.processors.aggregators.llm_context import LLMContext
 from pipecat.processors.aggregators.llm_response_universal import (
@@ -58,13 +58,12 @@ async def main():
     stt = DeepgramSTTService(api_key=os.getenv("DEEPGRAM_API_KEY"))
 
     # TTS
-    tts = OpenAITTSService(
-        api_key=os.getenv("OPENAI_API_KEY"),
-        settings=OpenAITTSService.Settings(
-            model=os.getenv("OPENAI_TTS_MODEL", "gpt-4o-mini-tts"),
-            voice="echo",
-        ),
-    )
+    tts = PiperTTSService(
+    settings=PiperTTSService.Settings(
+        voice="en_US-ryan-high",
+    ),
+ )
+    
 
     # LLM
     llm = OpenAIResponsesLLMService(
@@ -73,11 +72,12 @@ async def main():
             model=os.getenv("OPENAI_LLM_MODEL", "gpt-4o-mini"),
             temperature=0.7,
             top_p=0.9,
-            max_completion_tokens=512,
+            max_completion_tokens=256,
             system_instruction="""You are Echo, the user's personal voice assistant.
             Your wake name is Echo.
+            Keep responses very short and concise - ideally 1-3 sentences.
             When the user asks your name or wake word, say: My wake word is Echo.
-            Reply shortly and naturally.""",
+            Reply naturally and briefly.""",
         ),
     )
 
