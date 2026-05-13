@@ -10,7 +10,7 @@ from pipecat.pipeline.runner import PipelineRunner
 from pipecat.services.deepgram.stt import DeepgramSTTService
 from pipecat.services.piper.tts import PiperTTSService
 from pipecat.services.openai.responses.llm import OpenAIResponsesLLMService
-from pipecat.services.piper import PiperTTSService
+from tools.piper_tts import PiperTTSProcessor
 from pipecat.audio.vad.silero import SileroVADAnalyzer
 from pipecat.processors.aggregators.llm_context import LLMContext
 from pipecat.processors.aggregators.llm_response_universal import (
@@ -58,11 +58,7 @@ async def main():
     stt = DeepgramSTTService(api_key=os.getenv("DEEPGRAM_API_KEY"))
 
     # TTS
-    tts = PiperTTSService(
-    settings=PiperTTSService.Settings(
-        voice="en_US-ryan-high",
-    ),
- )
+    tts = PiperTTSProcessor()
     
 
     # LLM
@@ -127,7 +123,6 @@ async def main():
         tts,
         bot_tts_memory,
         LatencyLogger(stage_name="post-tts"),
-        transport.output(),
         assistant_agg,
     ])
 
