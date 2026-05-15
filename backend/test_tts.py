@@ -1,10 +1,10 @@
 #!/usr/bin/env python3
 import asyncio
-from tools.piper_tts import speak_with_piper
+from tools.gtts_tts import speak_with_gtts
 
 async def test_tts():
-    print("Testing Piper TTS...")
-    await asyncio.to_thread(speak_with_piper, "Hello! How can I help today?")
+    print("Testing gTTS...")
+    await speak_with_gtts("Hello! How can I help today?")
     print("Test completed")
 
 if __name__ == "__main__":

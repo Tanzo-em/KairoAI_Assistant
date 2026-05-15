@@ -8,9 +8,8 @@ from pipecat.pipeline.pipeline import Pipeline
 from pipecat.pipeline.task import PipelineTask, PipelineParams
 from pipecat.pipeline.runner import PipelineRunner
 from pipecat.services.deepgram.stt import DeepgramSTTService
-from pipecat.services.piper.tts import PiperTTSService
 from pipecat.services.openai.responses.llm import OpenAIResponsesLLMService
-from tools.piper_tts import PiperTTSProcessor
+from tools.gtts_tts import GTTSProcessor
 from pipecat.audio.vad.silero import SileroVADAnalyzer
 from pipecat.processors.aggregators.llm_context import LLMContext
 from pipecat.processors.aggregators.llm_response_universal import (
@@ -58,8 +57,7 @@ async def main():
     stt = DeepgramSTTService(api_key=os.getenv("DEEPGRAM_API_KEY"))
 
     # TTS
-    tts = PiperTTSProcessor()
-    
+    tts = GTTSProcessor()
 
     # LLM
     llm = OpenAIResponsesLLMService(
