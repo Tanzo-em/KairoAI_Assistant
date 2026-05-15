@@ -96,14 +96,6 @@ class LatencyLogger(FrameProcessor):
                 details="response_start",
             )
 
-        elif isinstance(frame, LLMTextFrame):
-            truncated = frame.text.replace("\n", " ")[:512]
-            self._log_latency(
-                "llm_text_delta",
-                category="llm",
-                details=truncated,
-            )
-
         elif isinstance(frame, LLMFullResponseEndFrame):
             self._log_latency(
                 "llm_response_end",
