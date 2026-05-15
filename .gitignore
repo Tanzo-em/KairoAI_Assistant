@@ -1,1 +1,3 @@
 backend/.env
+.csv
+latency_log.csv

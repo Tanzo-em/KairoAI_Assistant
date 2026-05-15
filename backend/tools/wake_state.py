@@ -2,7 +2,7 @@ import time
 
 porcupine_awake = False
 last_wake_time = 0.0
-WAKE_ACTIVE_SECONDS = 30.0
+WAKE_ACTIVE_SECONDS = 180.0
 
 
 def trigger_wake():

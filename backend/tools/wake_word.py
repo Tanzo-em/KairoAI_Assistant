@@ -14,7 +14,7 @@ class WakeWordProcessor(FrameProcessor):
 
         self.awake = False
         self.last_command_time = 0
-        self.sleep_timeout_sec = 30
+        self.sleep_timeout_sec = 180
 
     def clean_text(self, text: str) -> str:
         text = text.lower()
@@ -59,18 +59,23 @@ class WakeWordProcessor(FrameProcessor):
                 logger.debug(f"IGNORED BOT SPEAKER ECHO: {original_text}")
                 return
 
+            wake, command_text = self.parse_wake_and_command(cleaned_text)
+
             if self.is_timeout():
                 self.awake = False
-                sleep_now()
-                logger.debug("ECHO BACK TO SLEEP AFTER 30 SECONDS")
+                logger.debug("ECHO BACK TO SLEEP AFTER TIMEOUT")
                 await set_ui_status("sleeping", "Echo is sleeping")
-                return
+
+                if not wake:
+                    sleep_now()
+                    return
+
+                logger.debug("TIMEOUT EXPIRED BUT WAKE WORD DETECTED: resuming on STT wake")
 
             if consume_if_awake():
                 self.awake = True
                 self.last_command_time = time.time()
 
-                wake, command_text = self.parse_wake_and_command(cleaned_text)
                 if wake:
                     if not command_text:
                         logger.debug("ECHO IS AWAKE. SAYING GREETING AND WAITING FOR COMMAND.")
@@ -92,7 +97,6 @@ class WakeWordProcessor(FrameProcessor):
                 await self.push_frame(frame, direction)
                 return
 
-            wake, command_text = self.parse_wake_and_command(cleaned_text)
             if not self.awake:
                 if wake:
                     logger.debug(f"STT FALLBACK WAKE DETECTED: {cleaned_text}")
@@ -122,7 +126,6 @@ class WakeWordProcessor(FrameProcessor):
             if not cleaned_text:
                 return
 
-            wake, command_text = self.parse_wake_and_command(cleaned_text)
             if wake and not command_text:
                 logger.debug("IGNORED WAKE WORD TEXT FROM STT")
                 return
