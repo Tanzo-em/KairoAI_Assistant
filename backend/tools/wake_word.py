@@ -81,7 +81,7 @@ class WakeWordProcessor(FrameProcessor):
                         logger.debug("ECHO IS AWAKE. SAYING GREETING AND WAITING FOR COMMAND.")
                         await self.push_frame(
                             TTSTextFrame(
-                                text="Hello! How can I help today?",
+                                text="Hello! How can I help you today?",
                                 aggregated_by="wake_greeting",
                             ),
                             direction,

@@ -10,3 +10,15 @@ gtts_latency_results.csv
 pyttsx3_latency_results.csv
 test_tts.py
 *.wav
+
+# Python environments
+.venv/
+*.pyc
+__pycache__/
+
+# Sherpa ONNX models (large binaries)
+backend/models/sherpa/
+
+# Temporary audio and cache
+backend/tmp/
+*.prof

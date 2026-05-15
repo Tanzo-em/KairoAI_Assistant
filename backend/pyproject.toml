@@ -8,6 +8,7 @@ dependencies = [
     "loguru>=0.7.3",
     "pipecat-ai[cartesia,deepgram,openai]>=1.1.0",
     "gtts>=2.4.9",
+    "edge-tts>=7.2.8",
     "pvporcupine>=4.0.2",
     "pyaudio>=0.2.14",
     "pychrome>=0.2.4",

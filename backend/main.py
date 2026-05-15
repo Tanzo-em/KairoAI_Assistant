@@ -53,11 +53,34 @@ async def main():
     await start_ui_server()
     await set_ui_status("sleeping", "Say Echo to wake me")
 
-    # STT
-    stt = DeepgramSTTService(api_key=os.getenv("DEEPGRAM_API_KEY"))
+    # STT and TTS selection (Deepgram/gTTS by default; Sherpa if available or requested)
+    use_sherpa_env = os.getenv("USE_SHERPA", "0")
+    try:
+        from tools.sherpa_integration import sherpa_installed, sherpa_models_present
+        sherpa_available = sherpa_installed() and sherpa_models_present()
+    except Exception:
+        sherpa_available = False
 
-    # TTS
-    tts = GTTSProcessor()
+    if use_sherpa_env == "1" and sherpa_available:
+        from tools.sherpa_service import SherpaSTTService
+        from tools.sherpa_tts import SherpaTTSProcessor
+
+        stt = SherpaSTTService()
+        tts = SherpaTTSProcessor()
+    else:
+        # Default pipeline uses Edge TTS for a more natural voice and falls back to gTTS if needed.
+        stt = DeepgramSTTService(api_key=os.getenv("DEEPGRAM_API_KEY"))
+        use_gtts_env = os.getenv("USE_GTTTS", "0")
+        if use_gtts_env == "1":
+            tts = GTTSProcessor()
+        else:
+            try:
+                from tools.edge_tts import EdgeTTSProcessor
+
+                tts = EdgeTTSProcessor()
+            except Exception as e:
+                logger.warning(f"edge-tts unavailable, falling back to gTTS: {e}")
+                tts = GTTSProcessor()
 
     # LLM
     llm = OpenAIResponsesLLMService(
