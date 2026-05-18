@@ -28,9 +28,27 @@ from tools.media_control import MediaCommandProcessor
 from tools.ui_state import start_ui_server, set_ui_status
 from tools.porcupine_wake import PorcupineWakeListener
 from tools.audio_guard import remember_bot_tts
+from datetime import datetime
+from zoneinfo import ZoneInfo
 load_dotenv()
 
+class TimeContextProcessor(FrameProcessor):
+    async def process_frame(self, frame: Frame, direction: FrameDirection):
+        await super().process_frame(frame, direction)
 
+        if isinstance(frame, TranscriptionFrame):
+            now = datetime.now(ZoneInfo("Asia/Kolkata"))
+            current_datetime = now.strftime("%A, %d %B %Y, %I:%M:%S %p")
+
+            original_text = frame.text.strip()
+
+            frame.text = (
+                f"[Current date and time: {current_datetime}. "
+                f"Timezone: Asia/Kolkata, India.]\n\n"
+                f"User said: {original_text}"
+            )
+
+        await self.push_frame(frame, direction)
 
 class BotTTSMemoryProcessor(FrameProcessor):
     async def process_frame(self, frame: Frame, direction: FrameDirection):
@@ -45,6 +63,7 @@ class BotTTSMemoryProcessor(FrameProcessor):
 async def main():
     wake_processor = WakeWordProcessor()
     media_processor = MediaCommandProcessor()
+    time_context_processor = TimeContextProcessor()
     bot_tts_memory = BotTTSMemoryProcessor()
     logger.debug("Starting echo Assistant")
     porcupine_listener = PorcupineWakeListener()
@@ -91,10 +110,14 @@ async def main():
             top_p=0.9,
             max_completion_tokens=256,
             system_instruction="""You are Echo, the user's personal voice assistant.
-            Your wake name is Echo.
-            Keep responses very short and concise - ideally 1-3 sentences.
-            When the user asks your name or wake word, say: My wake word is Echo.
-            Reply naturally and briefly.""",
+                                    Your wake name is Echo.
+
+                                    The current date and time may be provided inside the user's message.
+                                    When the user asks today's date, current time, day, month, or year, use the provided current date/time.
+                                    Do not guess the date or time.
+
+                                    When the user asks your name or wake word, say: My wake word is Echo.
+                                    Reply shortly and naturally.""",
         ),
     )
 
@@ -138,6 +161,7 @@ async def main():
         LatencyLogger(stage_name="post-stt"),
         wake_processor,
         media_processor,
+        time_context_processor,
         user_agg,
         llm,
         LatencyLogger(stage_name="post-llm"),
