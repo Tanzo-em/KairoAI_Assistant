@@ -2,6 +2,11 @@ import os
 import time
 from pathlib import Path
 from loguru import logger
+from tools.audio_playback import (
+    play_wav_interruptible,
+    playback_generation,
+    was_playback_stopped_since,
+)
 
 MODEL_DIR = Path(__file__).resolve().parent.parent / "models" / "sherpa"
 
@@ -118,6 +123,8 @@ def speak_with_sherpa_tts(text: str) -> None:
     from pathlib import Path
     import subprocess
 
+    generation = playback_generation()
+
     # Try to instantiate a default OfflineTts using a detected model file
     try:
         model_file = next(MODEL_DIR.glob("*tts*.onnx"), None)
@@ -140,7 +147,9 @@ def speak_with_sherpa_tts(text: str) -> None:
                 raise RuntimeError('Unknown OfflineTts API - cannot synthesize')
 
         # play generated wav
-        subprocess.run(["aplay", str(wav_path)])
+        if not was_playback_stopped_since(generation):
+            play_wav_interruptible(wav_path, generation=generation)
+
         wav_path.unlink(missing_ok=True)
     except Exception as e:
         raise RuntimeError(f"Sherpa TTS failed: {e}")

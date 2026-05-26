@@ -3,7 +3,8 @@ import re
 from loguru import logger
 from tools.ui_state import set_ui_status
 from tools.wake_state import consume_if_awake, sleep_now
-from tools.audio_guard import is_probably_bot_echo
+from tools.audio_guard import is_bot_speaking, is_probably_bot_echo
+from tools.audio_playback import stop_current_playback
 from pipecat.frames.frames import Frame, TranscriptionFrame, TTSTextFrame
 from pipecat.processors.frame_processor import FrameProcessor, FrameDirection
 
@@ -50,16 +51,26 @@ class WakeWordProcessor(FrameProcessor):
         if isinstance(frame, TranscriptionFrame):
             original_text = frame.text.strip()
             cleaned_text = self.clean_text(original_text)
+            frame.metadata["explicit_wake_word"] = False
+            frame.metadata["wake_activated"] = False
 
             logger.debug(f"HEARD RAW: {original_text}")
             logger.debug(f"HEARD CLEAN: {cleaned_text}")
 
+            wake, command_text = self.parse_wake_and_command(cleaned_text)
 
             if is_probably_bot_echo(cleaned_text):
                 logger.debug(f"IGNORED BOT SPEAKER ECHO: {original_text}")
                 return
 
-            wake, command_text = self.parse_wake_and_command(cleaned_text)
+            if is_bot_speaking():
+                if not wake:
+                    logger.debug(f"IGNORED AUDIO WHILE BOT SPEAKING: {original_text}")
+                    return
+
+                logger.debug(f"USER INTERRUPTED BOT SPEECH WITH WAKE WORD: {original_text}")
+                stop_current_playback()
+                await self.broadcast_interruption()
 
             if self.is_timeout():
                 self.awake = False
@@ -75,8 +86,10 @@ class WakeWordProcessor(FrameProcessor):
             if consume_if_awake():
                 self.awake = True
                 self.last_command_time = time.time()
+                frame.metadata["wake_activated"] = True
 
                 if wake:
+                    frame.metadata["explicit_wake_word"] = True
                     if not command_text:
                         logger.debug("ECHO IS AWAKE. SAYING GREETING AND WAITING FOR COMMAND.")
                         await self.push_frame(
@@ -99,6 +112,8 @@ class WakeWordProcessor(FrameProcessor):
 
             if not self.awake:
                 if wake:
+                    frame.metadata["explicit_wake_word"] = True
+                    frame.metadata["wake_activated"] = True
                     logger.debug(f"STT FALLBACK WAKE DETECTED: {cleaned_text}")
                     self.awake = True
                     self.last_command_time = time.time()
@@ -129,6 +144,11 @@ class WakeWordProcessor(FrameProcessor):
             if wake and not command_text:
                 logger.debug("IGNORED WAKE WORD TEXT FROM STT")
                 return
+
+            if wake:
+                frame.metadata["explicit_wake_word"] = True
+                frame.metadata["wake_activated"] = True
+                frame.text = command_text
 
             self.last_command_time = time.time()
             logger.debug(f"COMMAND RECEIVED AFTER PORCUPINE WAKE: {original_text}")

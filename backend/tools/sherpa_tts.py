@@ -2,8 +2,16 @@ import asyncio
 from pathlib import Path
 
 from loguru import logger
-from pipecat.frames.frames import Frame, LLMTextFrame, TTSTextFrame
+from pipecat.frames.frames import (
+    Frame,
+    InterruptionFrame,
+    LLMTextFrame,
+    TTSTextFrame,
+    UserStartedSpeakingFrame,
+    VADUserStartedSpeakingFrame,
+)
 from pipecat.processors.frame_processor import FrameProcessor, FrameDirection
+from tools.audio_playback import stop_current_playback
 
 from .sherpa_integration import sherpa_installed, sherpa_models_present, speak_with_sherpa_tts
 
@@ -15,6 +23,15 @@ class SherpaTTSProcessor(FrameProcessor):
 
     async def process_frame(self, frame: Frame, direction: FrameDirection):
         await super().process_frame(frame, direction)
+
+        if isinstance(
+            frame,
+            (InterruptionFrame, VADUserStartedSpeakingFrame, UserStartedSpeakingFrame),
+        ):
+            self.buffer = ""
+            stop_current_playback()
+            await self.push_frame(frame, direction)
+            return
 
         if isinstance(frame, (LLMTextFrame, TTSTextFrame)):
             self.buffer += frame.text

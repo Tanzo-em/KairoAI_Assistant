@@ -66,13 +66,13 @@ export default function Home() {
   }, [status]);
 
   return (
-    <main className="min-h-screen bg-[#050816] flex items-center justify-center p-4">
-      <div className="relative w-[min(100vw,100vh)] h-[min(100vw,100vh)] max-w-[1080px] max-h-[1080px] overflow-hidden rounded-[56px] border border-white/10 bg-[radial-gradient(circle_at_top,#132a57_0%,#081124_45%,#020617_100%)] shadow-[0_0_60px_rgba(0,0,0,0.45)]">
+    <main className="min-h-screen bg-[#050816] flex items-center justify-center overflow-hidden">
+      <div className="relative aspect-square h-[min(100vw,100vh,1080px)] w-[min(100vw,100vh,1080px)] overflow-hidden rounded-full border border-white/10 bg-[radial-gradient(circle_at_top,#132a57_0%,#081124_45%,#020617_100%)] shadow-[0_0_60px_rgba(0,0,0,0.45)]">
         {/* ambient background */}
         <div className="absolute inset-0">
-          <div className="absolute -top-20 left-1/2 h-72 w-72 -translate-x-1/2 rounded-full bg-cyan-500/20 blur-3xl" />
-          <div className="absolute bottom-12 left-10 h-44 w-44 rounded-full bg-fuchsia-500/10 blur-3xl" />
-          <div className="absolute right-10 top-24 h-56 w-56 rounded-full bg-blue-500/10 blur-3xl" />
+          <div className="absolute -top-[8%] left-1/2 h-[34%] w-[34%] -translate-x-1/2 rounded-full bg-cyan-500/20 blur-3xl" />
+          <div className="absolute bottom-[13%] left-[18%] h-[22%] w-[22%] rounded-full bg-fuchsia-500/10 blur-3xl" />
+          <div className="absolute right-[17%] top-[18%] h-[26%] w-[26%] rounded-full bg-blue-500/10 blur-3xl" />
           <div className="absolute inset-0 bg-[linear-gradient(to_bottom,rgba(255,255,255,0.03),transparent_20%,transparent_80%,rgba(255,255,255,0.03))]" />
         </div>
 
@@ -80,47 +80,48 @@ export default function Home() {
         {showSplash && (
           <button
             onClick={() => setShowSplash(false)}
-            className="absolute inset-0 z-30 flex flex-col items-center justify-center bg-[radial-gradient(circle_at_center,rgba(10,25,50,1),rgba(2,6,23,1))] text-white"          >
+            className="absolute inset-0 z-30 flex flex-col items-center justify-center rounded-full bg-[radial-gradient(circle_at_center,rgba(10,25,50,1),rgba(2,6,23,1))] px-[18%] text-white"
+          >
             <div className="relative flex items-center justify-center">
-              <div className="absolute h-64 w-64 rounded-full border border-cyan-400/30 animate-[spin_12s_linear_infinite]" />
-              <div className="absolute h-80 w-80 rounded-full border border-fuchsia-400/20 animate-[spin_18s_linear_infinite_reverse]" />
-              <div className="absolute h-52 w-52 rounded-full bg-cyan-400/15 blur-2xl animate-pulse" />
-              <div className="relative grid h-40 w-40 place-items-center rounded-full bg-gradient-to-br from-cyan-400 via-blue-500 to-fuchsia-500 shadow-[0_0_60px_rgba(59,130,246,0.55)]">
-                <div className="grid h-28 w-28 place-items-center rounded-full bg-slate-950/80">
-                  <Sparkles size={44} />
+              <div className="absolute h-[24vw] max-h-64 min-h-36 w-[24vw] max-w-64 min-w-36 rounded-full border border-cyan-400/30 animate-[spin_12s_linear_infinite]" />
+              <div className="absolute h-[30vw] max-h-80 min-h-44 w-[30vw] max-w-80 min-w-44 rounded-full border border-fuchsia-400/20 animate-[spin_18s_linear_infinite_reverse]" />
+              <div className="absolute h-[20vw] max-h-52 min-h-32 w-[20vw] max-w-52 min-w-32 rounded-full bg-cyan-400/15 blur-2xl animate-pulse" />
+              <div className="relative grid h-[15vw] max-h-40 min-h-24 w-[15vw] max-w-40 min-w-24 place-items-center rounded-full bg-gradient-to-br from-cyan-400 via-blue-500 to-fuchsia-500 shadow-[0_0_60px_rgba(59,130,246,0.55)]">
+                <div className="grid h-[10vw] max-h-28 min-h-16 w-[10vw] max-w-28 min-w-16 place-items-center rounded-full bg-slate-950/80">
+                  <Sparkles className="h-[42%] w-[42%]" />
                 </div>
               </div>
 
-              <div className="absolute -left-28 top-10 h-3 w-3 rounded-full bg-cyan-300 animate-bounce" />
-              <div className="absolute -right-24 bottom-8 h-4 w-4 rounded-full bg-fuchsia-300 animate-pulse" />
-              <div className="absolute left-10 -top-14 h-2.5 w-2.5 rounded-full bg-blue-300 animate-ping" />
+              <div className="absolute -left-[34%] top-[22%] h-3 w-3 rounded-full bg-cyan-300 animate-bounce" />
+              <div className="absolute -right-[32%] bottom-[18%] h-4 w-4 rounded-full bg-fuchsia-300 animate-pulse" />
+              <div className="absolute left-[18%] -top-[28%] h-2.5 w-2.5 rounded-full bg-blue-300 animate-ping" />
             </div>
 
-            <h1 className="mt-12 text-5xl font-extrabold tracking-wide">
+            <h1 className="mt-[7%] text-center text-[clamp(2rem,5vw,3.25rem)] font-extrabold tracking-wide">
               Welcome to Echo
             </h1>
-            <p className="mt-4 max-w-xl text-center text-lg text-slate-300">
+            <p className="mt-3 max-w-[34rem] text-center text-[clamp(0.95rem,2vw,1.25rem)] text-slate-300">
               Your smart voice assistant for media, search, and conversation.
             </p>
 
-            <div className="mt-10 rounded-full border border-cyan-400/30 bg-white/5 px-6 py-3 text-sm text-slate-300">
+            <div className="mt-[6%] rounded-full border border-cyan-400/30 bg-white/5 px-6 py-3 text-sm text-slate-300">
               Tap anywhere to continue
             </div>
           </button>
         )}
 
         {/* main content */}
-        <div className="relative z-10 flex h-full flex-col p-10 text-white">
+        <div className="relative z-10 mx-auto flex h-full w-[76%] max-w-[820px] flex-col items-center px-2 py-[8.5%] text-center text-white">
           {/* header */}
-          <div className="flex items-center justify-between">
+          <div className="flex w-full flex-col items-center gap-4">
             <div>
-              <h1 className="text-3xl font-bold tracking-wide">Echo AI Assistant</h1>
-              <p className="mt-1 text-sm text-slate-300">
-                Smart display UI • 1080 × 1080
+              <h1 className="text-[clamp(1.45rem,3.4vw,2.45rem)] font-bold tracking-wide">Echo AI Assistant</h1>
+              <p className="mt-1 text-[clamp(0.78rem,1.35vw,0.95rem)] text-slate-300">
+                Circular smart display
               </p>
             </div>
 
-            <div className="flex items-center gap-3">
+            <div className="flex max-w-full flex-wrap items-center justify-center gap-3">
               <div
                 className={`h-3.5 w-3.5 rounded-full ${
                   wsConnected ? "bg-green-400 shadow-[0_0_16px_rgba(74,222,128,0.8)]" : "bg-red-400 shadow-[0_0_16px_rgba(248,113,113,0.8)]"
@@ -130,7 +131,7 @@ export default function Home() {
                 {wsConnected ? "Connected" : "Disconnected"}
               </span>
               <span
-                className={`rounded-full px-5 py-2 text-sm font-bold tracking-wider ${badgeClass(
+                className={`rounded-full px-4 py-2 text-xs font-bold tracking-wider ${badgeClass(
                   status
                 )}`}
               >
@@ -140,74 +141,71 @@ export default function Home() {
           </div>
 
           {/* center */}
-          <section className="flex flex-1 flex-col items-center justify-center text-center">
+          <section className="flex min-h-0 flex-1 flex-col items-center justify-center">
             <div className="relative flex items-center justify-center">
               {/* outer animated waves */}
               {(status === "listening" || status === "speaking") && (
                 <>
-                  <div className="absolute h-72 w-72 rounded-full border border-cyan-400/25 animate-ping" />
-                  <div className="absolute h-88 w-88 rounded-full border border-cyan-300/15 animate-pulse" />
+                  <div className="absolute h-[28vw] max-h-72 min-h-44 w-[28vw] max-w-72 min-w-44 rounded-full border border-cyan-400/25 animate-ping" />
+                  <div className="absolute h-[34vw] max-h-[22rem] min-h-52 w-[34vw] max-w-[22rem] min-w-52 rounded-full border border-cyan-300/15 animate-pulse" />
                 </>
               )}
 
               {status === "thinking" && (
                 <>
-                  <div className="absolute h-72 w-72 rounded-full border border-yellow-400/25 animate-pulse" />
-                  <div className="absolute h-88 w-88 rounded-full border border-orange-300/15 animate-[spin_8s_linear_infinite]" />
+                  <div className="absolute h-[28vw] max-h-72 min-h-44 w-[28vw] max-w-72 min-w-44 rounded-full border border-yellow-400/25 animate-pulse" />
+                  <div className="absolute h-[34vw] max-h-[22rem] min-h-52 w-[34vw] max-w-[22rem] min-w-52 rounded-full border border-orange-300/15 animate-[spin_8s_linear_infinite]" />
                 </>
               )}
 
               <div
-                className={`relative grid h-72 w-72 place-items-center rounded-full shadow-[0_0_90px_rgba(59,130,246,0.45)] transition-all duration-500 ${orbClass(
+                className={`relative grid h-[27vw] max-h-72 min-h-40 w-[27vw] max-w-72 min-w-40 place-items-center rounded-full shadow-[0_0_90px_rgba(59,130,246,0.45)] transition-all duration-500 ${orbClass(
                   status
                 )} ${status === "speaking" ? "animate-pulse" : ""}`}
               >
-                <div className="grid h-44 w-44 place-items-center rounded-full bg-slate-950/75 backdrop-blur-xl border border-white/10">
-                  {status === "sleeping" && <Moon size={72} />}
-                  {status === "listening" && <Mic size={72} />}
-                  {status === "thinking" && <Brain size={72} />}
-                  {status === "speaking" && <Volume2 size={72} />}
-                  {status === "playing" && <Music size={72} />}
+                <div className="grid h-[62%] w-[62%] place-items-center rounded-full border border-white/10 bg-slate-950/75 backdrop-blur-xl">
+                  {status === "sleeping" && <Moon className="h-[42%] w-[42%]" />}
+                  {status === "listening" && <Mic className="h-[42%] w-[42%]" />}
+                  {status === "thinking" && <Brain className="h-[42%] w-[42%]" />}
+                  {status === "speaking" && <Volume2 className="h-[42%] w-[42%]" />}
+                  {status === "playing" && <Music className="h-[42%] w-[42%]" />}
                 </div>
               </div>
 
               {/* floating particles */}
-              <div className="absolute -left-20 top-8 h-4 w-4 rounded-full bg-cyan-300/80 animate-bounce" />
-              <div className="absolute -right-16 top-20 h-3 w-3 rounded-full bg-fuchsia-300/80 animate-ping" />
-              <div className="absolute left-8 -bottom-8 h-3.5 w-3.5 rounded-full bg-blue-300/80 animate-pulse" />
-              <div className="absolute right-10 -bottom-10 h-2.5 w-2.5 rounded-full bg-cyan-200/80 animate-bounce" />
+              <div className="absolute -left-[24%] top-[12%] h-4 w-4 rounded-full bg-cyan-300/80 animate-bounce" />
+              <div className="absolute -right-[20%] top-[26%] h-3 w-3 rounded-full bg-fuchsia-300/80 animate-ping" />
+              <div className="absolute left-[12%] -bottom-[14%] h-3.5 w-3.5 rounded-full bg-blue-300/80 animate-pulse" />
+              <div className="absolute right-[14%] -bottom-[16%] h-2.5 w-2.5 rounded-full bg-cyan-200/80 animate-bounce" />
             </div>
 
-            <h2 className="mt-10 text-5xl font-bold">{titleText}</h2>
-            <p className="mt-3 text-xl text-slate-300">{message}</p>
+            <h2 className="mt-[6%] max-w-full text-balance text-[clamp(1.9rem,4.8vw,3.45rem)] font-bold leading-tight">{titleText}</h2>
+            <p className="mt-3 max-w-[34rem] text-balance text-[clamp(1rem,2.2vw,1.35rem)] text-slate-300">{message}</p>
 
-            <div className="mt-10 grid grid-cols-3 gap-5">
+            <div className="mt-[6%] grid w-full grid-cols-3 gap-3">
               <InfoCard
-                icon={<Mic size={24} />}
+                icon={<Mic className="h-6 w-6" />}
                 title="Microphone"
                 value={wsConnected ? "Ready" : "Offline"}
               />
               <InfoCard
-                icon={<Volume2 size={24} />}
+                icon={<Volume2 className="h-6 w-6" />}
                 title="Speaker"
                 value="Ready"
               />
               <InfoCard
-                icon={<Play size={24} />}
+                icon={<Play className="h-6 w-6" />}
                 title="Media"
-                value="YouTube / Spotify"
+                value="YouTube"
               />
             </div>
           </section>
 
           {/* footer */}
-          <footer className="rounded-[28px] border border-white/10 bg-slate-950/40 p-5 backdrop-blur-md">
-            <p className="text-base text-slate-200">
+          <footer className="w-[86%] rounded-full border border-white/10 bg-slate-950/40 px-7 py-4 backdrop-blur-md">
+            <p className="text-[clamp(0.9rem,1.8vw,1.05rem)] text-slate-200">
               <span className="font-semibold text-cyan-300">Try:</span>{" "}
               “Echo, play Believer on YouTube”
-            </p>
-            <p className="mt-1 text-sm text-slate-400">
-              Voice states: sleeping • listening • thinking • speaking • playing
             </p>
           </footer>
         </div>
@@ -226,10 +224,10 @@ function InfoCard({
   value: string;
 }) {
   return (
-    <div className="flex w-[250px] flex-col gap-3 rounded-[28px] border border-white/10 bg-white/5 p-5 text-left backdrop-blur-md">
+    <div className="flex min-w-0 flex-col items-center gap-2 rounded-[18px] border border-white/10 bg-white/5 px-3 py-4 text-center backdrop-blur-md">
       <div className="text-cyan-300">{icon}</div>
       <span className="text-sm text-slate-300">{title}</span>
-      <b className="text-lg text-white">{value}</b>
+      <b className="max-w-full truncate text-[clamp(0.95rem,1.8vw,1.15rem)] text-white">{value}</b>
     </div>
   );
 }

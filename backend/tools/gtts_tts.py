@@ -6,8 +6,21 @@ from pathlib import Path
 
 from gtts import gTTS
 from loguru import logger
-from pipecat.frames.frames import Frame, LLMTextFrame, TTSTextFrame
+from pipecat.frames.frames import (
+    Frame,
+    InterruptionFrame,
+    LLMTextFrame,
+    TTSTextFrame,
+    UserStartedSpeakingFrame,
+    VADUserStartedSpeakingFrame,
+)
 from pipecat.processors.frame_processor import FrameProcessor, FrameDirection
+from tools.audio_playback import (
+    play_wav_interruptible,
+    playback_generation,
+    stop_current_playback,
+    was_playback_stopped_since,
+)
 
 BASE_DIR = Path(__file__).resolve().parent.parent
 OUTPUT_DIR = BASE_DIR / "tmp" / "gtts_audio"
@@ -35,14 +48,8 @@ def _convert_mp3_to_wav(mp3_path: Path, wav_path: Path) -> None:
         )
 
 
-def _play_wav(wav_path: Path) -> None:
-    process = subprocess.run(
-        ["aplay", str(wav_path)],
-        capture_output=True,
-        text=True,
-    )
-    if process.returncode != 0:
-        raise RuntimeError(f"aplay failed: {process.stderr.strip()}")
+def _play_wav(wav_path: Path, generation: int | None = None) -> None:
+    play_wav_interruptible(wav_path, generation=generation)
 
 
 def _speak_with_gtts(text: str) -> None:
@@ -51,6 +58,7 @@ def _speak_with_gtts(text: str) -> None:
         return
 
     OUTPUT_DIR.mkdir(parents=True, exist_ok=True)
+    generation = playback_generation()
     fd, mp3_path = tempfile.mkstemp(suffix=".mp3", dir=OUTPUT_DIR)
     os.close(fd)
     mp3_path = Path(mp3_path)
@@ -59,8 +67,12 @@ def _speak_with_gtts(text: str) -> None:
     try:
         tts = gTTS(text, lang="en")
         tts.save(str(mp3_path))
+        if was_playback_stopped_since(generation):
+            return
         _convert_mp3_to_wav(mp3_path, wav_path)
-        _play_wav(wav_path)
+        if was_playback_stopped_since(generation):
+            return
+        _play_wav(wav_path, generation=generation)
     finally:
         mp3_path.unlink(missing_ok=True)
         wav_path.unlink(missing_ok=True)
@@ -77,6 +89,15 @@ class GTTSProcessor(FrameProcessor):
 
     async def process_frame(self, frame: Frame, direction: FrameDirection):
         await super().process_frame(frame, direction)
+
+        if isinstance(
+            frame,
+            (InterruptionFrame, VADUserStartedSpeakingFrame, UserStartedSpeakingFrame),
+        ):
+            self.buffer = ""
+            stop_current_playback()
+            await self.push_frame(frame, direction)
+            return
 
         if isinstance(frame, (LLMTextFrame, TTSTextFrame)):
             self.buffer += frame.text
