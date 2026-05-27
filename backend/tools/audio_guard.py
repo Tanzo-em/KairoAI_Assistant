@@ -62,6 +62,19 @@ def is_probably_bot_echo(user_text: str) -> bool:
     if not cleaned_user:
         return False
 
+    user_command_prefixes = (
+        "set alarm",
+        "set an alarm",
+        "set the alarm",
+        "set reminder",
+        "set a reminder",
+        "remind me",
+        "wake me",
+    )
+
+    if cleaned_user.startswith(user_command_prefixes):
+        return False
+
     # remove expired bot texts
     with _state_lock:
         while _recent_bot_texts and _recent_bot_texts[0][1] < now:

@@ -20,6 +20,7 @@ from pipecat.frames.frames import (
     VADUserStartedSpeakingFrame,
 )
 from pipecat.processors.frame_processor import FrameProcessor, FrameDirection
+from tools.audio_guard import is_bot_speaking
 from tools.audio_playback import (
     play_wav_interruptible,
     playback_generation,
@@ -209,6 +210,11 @@ class EdgeTTSProcessor(FrameProcessor):
             (InterruptionFrame, VADUserStartedSpeakingFrame, UserStartedSpeakingFrame),
         ):
             if isinstance(frame, InterruptionFrame):
+                if is_bot_speaking():
+                    logger.debug("EdgeTTS ignored interruption while bot is speaking")
+                    await self.push_frame(frame, direction)
+                    return
+
                 self.buffer = ""
                 self._clear_queue()
                 stop_current_playback()

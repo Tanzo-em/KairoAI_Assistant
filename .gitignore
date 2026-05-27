@@ -1,6 +1,7 @@
 backend/.env
 
 *.csv
+*.json
 *.mp3
 latency_log.csv
 test_gtts_latency.py
