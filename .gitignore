@@ -23,3 +23,6 @@ backend/models/sherpa/
 # Temporary audio and cache
 backend/tmp/
 *.prof
+
+# Runtime logs
+backend/logs/assistant.log

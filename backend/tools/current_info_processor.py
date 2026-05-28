@@ -7,6 +7,7 @@ from loguru import logger
 from pipecat.frames.frames import Frame, TranscriptionFrame, TTSTextFrame
 from pipecat.processors.frame_processor import FrameDirection, FrameProcessor
 
+from tools.audio_playback import stop_current_playback
 from tools.web_search import ask_with_web_search
 
 
@@ -54,6 +55,74 @@ class CurrentInfoProcessor(FrameProcessor):
         cleaned = self.clean_text(text)
         return any(re.search(pattern, cleaned) for pattern in self.CURRENT_INFO_PATTERNS)
 
+    def is_news_stop_request(self, text: str) -> bool:
+        cleaned = self.clean_text(text)
+        return bool(
+            re.search(
+                r"\b(?:stop|stopped|cancel|end|quit|shut up|be quiet)\b.*\b(?:news|headlines?|stories)\b",
+                cleaned,
+            )
+            or re.search(
+                r"\b(?:news|headlines?|stories)\b.*\b(?:stop|stopped|cancel|end|quit)\b",
+                cleaned,
+            )
+        )
+
+    def requested_news_count(self, text: str) -> int:
+        cleaned = self.clean_text(text)
+        word_numbers = {
+            "one": 1,
+            "two": 2,
+            "three": 3,
+            "four": 4,
+            "five": 5,
+            "six": 6,
+            "seven": 7,
+            "eight": 8,
+            "nine": 9,
+            "ten": 10,
+        }
+
+        digit_match = re.search(
+            r"\b(?:top|only|just|give me|tell me)?\s*(\d{1,2})\s+(?:news|headlines?|stories|items)\b",
+            cleaned,
+        )
+        if digit_match:
+            return max(1, min(10, int(digit_match.group(1))))
+
+        for word, value in word_numbers.items():
+            if re.search(
+                rf"\b(?:top|only|just|give me|tell me)?\s*{word}\s+(?:news|headlines?|stories|items)\b",
+                cleaned,
+            ):
+                return value
+
+        top_match = re.search(r"\btop\s+(\d{1,2})\b", cleaned)
+        if top_match:
+            return max(1, min(10, int(top_match.group(1))))
+
+        for word, value in word_numbers.items():
+            if re.search(rf"\btop\s+{word}\b", cleaned):
+                return value
+
+        return 5
+
+    def limit_news_items(self, answer: str, count: int) -> str:
+        lines = []
+
+        for raw_line in answer.splitlines():
+            line = re.sub(r"^\s*(?:\d+[.)]\s*|[-*]\s*)", "", raw_line).strip()
+            if not line:
+                continue
+
+            parts = re.split(r"(?<=[.!?])\s+(?=[A-Z0-9])", line)
+            lines.extend(part.strip() for part in parts if part.strip())
+
+        if len(lines) <= count:
+            return answer.strip()
+
+        return "\n".join(lines[:count])
+
     def is_weather_request(self, text: str) -> bool:
         cleaned = self.clean_text(text)
         return any(word in cleaned for word in ["weather", "temperature", "rain"])
@@ -84,11 +153,12 @@ class CurrentInfoProcessor(FrameProcessor):
         cleaned = self.clean_text(text)
 
         if "news" in cleaned or "headline" in cleaned or "top stories" in cleaned:
-            count = 3 if re.search(r"\btop\s+3\b|\bthree\b", cleaned) else 5
+            count = self.requested_news_count(text)
             return (
                 f"{text}\n\n"
                 f"Use current web results. Give exactly {count} major news items. "
                 "Each item must be one short spoken sentence on its own line. "
+                f"Stop after item {count}. "
                 "Do not include source names, citations, URLs, domains, or links."
             )
 
@@ -203,6 +273,18 @@ class CurrentInfoProcessor(FrameProcessor):
             )
             return
 
+        if self.is_news_stop_request(original_text):
+            logger.info(f"CURRENT INFO STOP REQUEST: {original_text}")
+            stop_current_playback()
+            await self.push_frame(
+                TTSTextFrame(
+                    text="Stopped.",
+                    aggregated_by="current_info_processor",
+                ),
+                direction,
+            )
+            return
+
         if not self.is_current_info_request(original_text):
             await self.push_frame(frame, direction)
             return
@@ -217,6 +299,10 @@ class CurrentInfoProcessor(FrameProcessor):
         except Exception as e:
             logger.error(f"Current info web search failed: {e}")
             answer = "I could not get current information right now. Please check your internet or OpenAI API key."
+
+        cleaned_text = self.clean_text(original_text)
+        if "news" in cleaned_text or "headline" in cleaned_text or "top stories" in cleaned_text:
+            answer = self.limit_news_items(answer, self.requested_news_count(original_text))
 
         await self.push_frame(
             TTSTextFrame(
