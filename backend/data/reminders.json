@@ -22,5 +22,21 @@
     "remind_at": "2026-05-26T12:46:00+05:30",
     "done": true,
     "notifying": false
+  },
+  {
+    "id": "192373c8-bcfb-4f20-bd7b-80ed32cb1b5b",
+    "kind": "reminder",
+    "message": "check my phone.",
+    "remind_at": "2026-05-28T14:54:10.014403+05:30",
+    "done": true,
+    "notifying": false
+  },
+  {
+    "id": "4770d61a-6bea-4f79-bc8c-75b66bc27e72",
+    "kind": "alarm",
+    "message": "Alarm",
+    "remind_at": "2026-05-28T14:55:00+05:30",
+    "done": true,
+    "notifying": false
   }
 ]

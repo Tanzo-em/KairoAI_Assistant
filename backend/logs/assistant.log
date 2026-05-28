@@ -1039,3 +1039,506 @@ pvporcupine._porcupine.PorcupineInvalidArgumentError: Initialization failed:
 2026-05-26 13:19:59.140 | DEBUG    | pipecat.pipeline.runner:run:94 - Runner PipelineRunner#0 finished running PipelineTask#0
 2026-05-26 13:19:59.140 | DEBUG    | __main__:main:408 - Stopping Echo Assistant cleanup
 2026-05-26 13:19:59.140 | INFO     | tools.mpv_player:stop_existing:106 - Stopping existing mpv playback
+2026-05-28 14:05:06.065 | DEBUG    | pipecat.audio.vad.silero:__init__:146 - Loading Silero VAD model...
+2026-05-28 14:05:06.132 | DEBUG    | pipecat.audio.vad.silero:__init__:168 - Loaded Silero VAD
+2026-05-28 14:05:06.134 | DEBUG    | __main__:main:277 - Starting echo Assistant
+2026-05-28 14:05:06.135 | DEBUG    | tools.porcupine_wake:_run:50 - Using custom Porcupine keyword: /home/tanzo/Kyron_automation/KairoAI-Assistant/backend/models/echo_linux.ppn
+2026-05-28 14:05:06.137 | DEBUG    | tools.porcupine_wake:start:42 - Porcupine wake listener started
+2026-05-28 14:05:06.139 | ERROR    | tools.porcupine_wake:_run:140 - Porcupine wake listener error: Initialization failed:
+  [0] 5fe5c79 00000069: Keyword file (.ppn) file has incorrect format or belongs to a different platform.
+  [1] 5fe5c79 00000136: 28fcd9b
+  [2] 5fe5c79 000001FE: Loading keyword file at `/home/tanzo/Kyron_automation/KairoAI-Assistant/backend/models/echo_linux.ppn` failed with `INVALID_ARGUMENT`.
+Traceback (most recent call last):
+
+  File "/usr/lib/python3.12/threading.py", line 1030, in _bootstrap
+    self._bootstrap_inner()
+    │    └ <function Thread._bootstrap_inner at 0x70ecab7aa200>
+    └ <Thread(Thread-1 (_run), started daemon 124160939173568)>
+  File "/usr/lib/python3.12/threading.py", line 1073, in _bootstrap_inner
+    self.run()
+    │    └ <function Thread.run at 0x70ecab7a9ee0>
+    └ <Thread(Thread-1 (_run), started daemon 124160939173568)>
+  File "/usr/lib/python3.12/threading.py", line 1010, in run
+    self._target(*self._args, **self._kwargs)
+    │    │        │    │        │    └ {}
+    │    │        │    │        └ <Thread(Thread-1 (_run), started daemon 124160939173568)>
+    │    │        │    └ ()
+    │    │        └ <Thread(Thread-1 (_run), started daemon 124160939173568)>
+    │    └ <bound method PorcupineWakeListener._run of <tools.porcupine_wake.PorcupineWakeListener object at 0x70ec79369700>>
+    └ <Thread(Thread-1 (_run), started daemon 124160939173568)>
+
+> File "/home/tanzo/Kyron_automation/KairoAI-Assistant/backend/tools/porcupine_wake.py", line 51, in _run
+    self.porcupine = pvporcupine.create(
+    │    │           │           └ <function create at 0x70ec79b5ea20>
+    │    │           └ <module 'pvporcupine' from '/home/tanzo/Kyron_automation/KairoAI-Assistant/backend/.venv/lib/python3.12/site-packages/pvporcu...
+    │    └ None
+    └ <tools.porcupine_wake.PorcupineWakeListener object at 0x70ec79369700>
+
+  File "/home/tanzo/Kyron_automation/KairoAI-Assistant/backend/.venv/lib/python3.12/site-packages/pvporcupine/_factory.py", line 89, in create
+    return Porcupine(
+           └ <class 'pvporcupine._porcupine.Porcupine'>
+  File "/home/tanzo/Kyron_automation/KairoAI-Assistant/backend/.venv/lib/python3.12/site-packages/pvporcupine/_porcupine.py", line 212, in __init__
+    raise self._PICOVOICE_STATUS_TO_EXCEPTION[status](
+          │    │                              └ <PicovoiceStatuses.INVALID_ARGUMENT: 3>
+          │    └ {<PicovoiceStatuses.OUT_OF_MEMORY: 1>: <class 'pvporcupine._porcupine.PorcupineMemoryError'>, <PicovoiceStatuses.IO_ERROR: 2>...
+          └ <pvporcupine._porcupine.Porcupine object at 0x70ec79368440>
+
+pvporcupine._porcupine.PorcupineInvalidArgumentError: Initialization failed:
+  [0] 5fe5c79 00000069: Keyword file (.ppn) file has incorrect format or belongs to a different platform.
+  [1] 5fe5c79 00000136: 28fcd9b
+  [2] 5fe5c79 000001FE: Loading keyword file at `/home/tanzo/Kyron_automation/KairoAI-Assistant/backend/models/echo_linux.ppn` failed with `INVALID_ARGUMENT`.
+2026-05-28 14:05:06.251 | DEBUG    | pipecat.processors.frame_processor:link:521 - Linking Pipeline#0::Source -> LocalAudioInputTransport#0
+2026-05-28 14:05:06.252 | DEBUG    | pipecat.processors.frame_processor:link:521 - Linking LocalAudioInputTransport#0 -> VADProcessor#0
+2026-05-28 14:05:06.252 | DEBUG    | pipecat.processors.frame_processor:link:521 - Linking VADProcessor#0 -> OpenAIRealtime2Service#0
+2026-05-28 14:05:06.253 | DEBUG    | pipecat.processors.frame_processor:link:521 - Linking OpenAIRealtime2Service#0 -> BotSpeechInterruptionGuard#0
+2026-05-28 14:05:06.253 | DEBUG    | pipecat.processors.frame_processor:link:521 - Linking BotSpeechInterruptionGuard#0 -> LatencyLogger#0
+2026-05-28 14:05:06.253 | DEBUG    | pipecat.processors.frame_processor:link:521 - Linking LatencyLogger#0 -> WakeWordProcessor#0
+2026-05-28 14:05:06.253 | DEBUG    | pipecat.processors.frame_processor:link:521 - Linking WakeWordProcessor#0 -> MediaCommandProcessor#0
+2026-05-28 14:05:06.253 | DEBUG    | pipecat.processors.frame_processor:link:521 - Linking MediaCommandProcessor#0 -> ReminderProcessor#0
+2026-05-28 14:05:06.253 | DEBUG    | pipecat.processors.frame_processor:link:521 - Linking ReminderProcessor#0 -> CurrentInfoProcessor#0
+2026-05-28 14:05:06.253 | DEBUG    | pipecat.processors.frame_processor:link:521 - Linking CurrentInfoProcessor#0 -> TimeContextProcessor#0
+2026-05-28 14:05:06.254 | DEBUG    | pipecat.processors.frame_processor:link:521 - Linking TimeContextProcessor#0 -> MusicCommandLLMInputBlocker#0
+2026-05-28 14:05:06.254 | DEBUG    | pipecat.processors.frame_processor:link:521 - Linking MusicCommandLLMInputBlocker#0 -> BotTTSMemoryProcessor#0
+2026-05-28 14:05:06.254 | DEBUG    | pipecat.processors.frame_processor:link:521 - Linking BotTTSMemoryProcessor#0 -> RealtimeResponseRouter#0
+2026-05-28 14:05:06.254 | DEBUG    | pipecat.processors.frame_processor:link:521 - Linking RealtimeResponseRouter#0 -> LatencyLogger#1
+2026-05-28 14:05:06.255 | DEBUG    | pipecat.processors.frame_processor:link:521 - Linking LatencyLogger#1 -> RealtimeBotAudioGuard#0
+2026-05-28 14:05:06.255 | DEBUG    | pipecat.processors.frame_processor:link:521 - Linking RealtimeBotAudioGuard#0 -> LocalAudioOutputTransport#0
+2026-05-28 14:05:06.255 | DEBUG    | pipecat.processors.frame_processor:link:521 - Linking LocalAudioOutputTransport#0 -> Pipeline#0::Sink
+2026-05-28 14:05:06.256 | DEBUG    | pipecat.processors.frame_processor:link:521 - Linking PipelineTask#0::Source -> RTVIProcessor#0
+2026-05-28 14:05:06.258 | DEBUG    | pipecat.processors.frame_processor:link:521 - Linking RTVIProcessor#0 -> Pipeline#0
+2026-05-28 14:05:06.258 | DEBUG    | pipecat.processors.frame_processor:link:521 - Linking Pipeline#0 -> PipelineTask#0::Sink
+2026-05-28 14:05:06.260 | DEBUG    | pipecat.pipeline.runner:run:70 - Runner PipelineRunner#0 started running PipelineTask#0
+2026-05-28 14:05:06.261 | DEBUG    | pipecat.pipeline.task:_wait_for_pipeline_start:682 - PipelineTask#0: Starting. Waiting for StartFrame#0 to reach the end of the pipeline...
+2026-05-28 14:05:06.267 | DEBUG    | pipecat.audio.vad.vad_analyzer:set_params:155 - Setting VAD params to: confidence=0.7 start_secs=0.2 stop_secs=0.2 min_volume=0.6
+2026-05-28 14:05:08.427 | DEBUG    | pipecat.pipeline.task:_wait_for_pipeline_start:685 - PipelineTask#0: StartFrame#0 reached the end of the pipeline, pipeline is now ready.
+2026-05-28 14:07:21.149 | WARNING  | pipecat.pipeline.runner:_sig_cancel:135 - Interruption detected. Cancelling runner PipelineRunner#0
+2026-05-28 14:07:21.149 | DEBUG    | pipecat.pipeline.runner:cancel:103 - Cancelling runner PipelineRunner#0
+2026-05-28 14:07:21.149 | DEBUG    | pipecat.pipeline.task:_cancel:615 - Cancelling pipeline task PipelineTask#0
+2026-05-28 14:07:21.150 | DEBUG    | pipecat.pipeline.task:_wait_for_pipeline_end:703 - PipelineTask#0: Closing. Waiting for CancelFrame#0(reason: None) to reach the end of the pipeline...
+2026-05-28 14:07:23.417 | DEBUG    | pipecat.pipeline.task:wait_for_cancel:695 - PipelineTask#0: CancelFrame#0(reason: None) reached the end of the pipeline.
+2026-05-28 14:07:23.422 | DEBUG    | pipecat.pipeline.task:run:563 - Pipeline task PipelineTask#0 is finishing...
+2026-05-28 14:07:23.422 | DEBUG    | pipecat.pipeline.task:run:568 - Pipeline task PipelineTask#0 has finished
+2026-05-28 14:07:23.422 | DEBUG    | pipecat.pipeline.runner:run:94 - Runner PipelineRunner#0 finished running PipelineTask#0
+2026-05-28 14:07:23.422 | DEBUG    | __main__:main:376 - Stopping Echo Assistant cleanup
+2026-05-28 14:07:33.498 | DEBUG    | pipecat.audio.vad.silero:__init__:146 - Loading Silero VAD model...
+2026-05-28 14:07:33.558 | DEBUG    | pipecat.audio.vad.silero:__init__:168 - Loaded Silero VAD
+2026-05-28 14:07:33.559 | DEBUG    | __main__:main:277 - Starting echo Assistant
+2026-05-28 14:07:33.560 | DEBUG    | tools.porcupine_wake:_run:50 - Using custom Porcupine keyword: /home/tanzo/Kyron_automation/KairoAI-Assistant/backend/models/echo_linux.ppn
+2026-05-28 14:07:33.561 | DEBUG    | tools.porcupine_wake:start:42 - Porcupine wake listener started
+2026-05-28 14:07:33.566 | ERROR    | tools.porcupine_wake:_run:140 - Porcupine wake listener error: Initialization failed:
+  [0] 5fe5c79 00000069: Keyword file (.ppn) file has incorrect format or belongs to a different platform.
+  [1] 5fe5c79 00000136: 28fcd9b
+  [2] 5fe5c79 000001FE: Loading keyword file at `/home/tanzo/Kyron_automation/KairoAI-Assistant/backend/models/echo_linux.ppn` failed with `INVALID_ARGUMENT`.
+Traceback (most recent call last):
+
+  File "/usr/lib/python3.12/threading.py", line 1030, in _bootstrap
+    self._bootstrap_inner()
+    │    └ <function Thread._bootstrap_inner at 0x7e509a5aa200>
+    └ <Thread(Thread-1 (_run), started daemon 138883799705280)>
+  File "/usr/lib/python3.12/threading.py", line 1073, in _bootstrap_inner
+    self.run()
+    │    └ <function Thread.run at 0x7e509a5a9ee0>
+    └ <Thread(Thread-1 (_run), started daemon 138883799705280)>
+  File "/usr/lib/python3.12/threading.py", line 1010, in run
+    self._target(*self._args, **self._kwargs)
+    │    │        │    │        │    └ {}
+    │    │        │    │        └ <Thread(Thread-1 (_run), started daemon 138883799705280)>
+    │    │        │    └ ()
+    │    │        └ <Thread(Thread-1 (_run), started daemon 138883799705280)>
+    │    └ <bound method PorcupineWakeListener._run of <tools.porcupine_wake.PorcupineWakeListener object at 0x7e506812fe90>>
+    └ <Thread(Thread-1 (_run), started daemon 138883799705280)>
+
+> File "/home/tanzo/Kyron_automation/KairoAI-Assistant/backend/tools/porcupine_wake.py", line 51, in _run
+    self.porcupine = pvporcupine.create(
+    │    │           │           └ <function create at 0x7e506895ea20>
+    │    │           └ <module 'pvporcupine' from '/home/tanzo/Kyron_automation/KairoAI-Assistant/backend/.venv/lib/python3.12/site-packages/pvporcu...
+    │    └ None
+    └ <tools.porcupine_wake.PorcupineWakeListener object at 0x7e506812fe90>
+
+  File "/home/tanzo/Kyron_automation/KairoAI-Assistant/backend/.venv/lib/python3.12/site-packages/pvporcupine/_factory.py", line 89, in create
+    return Porcupine(
+           └ <class 'pvporcupine._porcupine.Porcupine'>
+  File "/home/tanzo/Kyron_automation/KairoAI-Assistant/backend/.venv/lib/python3.12/site-packages/pvporcupine/_porcupine.py", line 212, in __init__
+    raise self._PICOVOICE_STATUS_TO_EXCEPTION[status](
+          │    │                              └ <PicovoiceStatuses.INVALID_ARGUMENT: 3>
+          │    └ {<PicovoiceStatuses.OUT_OF_MEMORY: 1>: <class 'pvporcupine._porcupine.PorcupineMemoryError'>, <PicovoiceStatuses.IO_ERROR: 2>...
+          └ <pvporcupine._porcupine.Porcupine object at 0x7e506815d4c0>
+
+pvporcupine._porcupine.PorcupineInvalidArgumentError: Initialization failed:
+  [0] 5fe5c79 00000069: Keyword file (.ppn) file has incorrect format or belongs to a different platform.
+  [1] 5fe5c79 00000136: 28fcd9b
+  [2] 5fe5c79 000001FE: Loading keyword file at `/home/tanzo/Kyron_automation/KairoAI-Assistant/backend/models/echo_linux.ppn` failed with `INVALID_ARGUMENT`.
+2026-05-28 14:07:33.684 | DEBUG    | pipecat.processors.frame_processor:link:521 - Linking Pipeline#0::Source -> LocalAudioInputTransport#0
+2026-05-28 14:07:33.684 | DEBUG    | pipecat.processors.frame_processor:link:521 - Linking LocalAudioInputTransport#0 -> VADProcessor#0
+2026-05-28 14:07:33.684 | DEBUG    | pipecat.processors.frame_processor:link:521 - Linking VADProcessor#0 -> OpenAIRealtime2Service#0
+2026-05-28 14:07:33.684 | DEBUG    | pipecat.processors.frame_processor:link:521 - Linking OpenAIRealtime2Service#0 -> BotSpeechInterruptionGuard#0
+2026-05-28 14:07:33.684 | DEBUG    | pipecat.processors.frame_processor:link:521 - Linking BotSpeechInterruptionGuard#0 -> LatencyLogger#0
+2026-05-28 14:07:33.685 | DEBUG    | pipecat.processors.frame_processor:link:521 - Linking LatencyLogger#0 -> WakeWordProcessor#0
+2026-05-28 14:07:33.685 | DEBUG    | pipecat.processors.frame_processor:link:521 - Linking WakeWordProcessor#0 -> MediaCommandProcessor#0
+2026-05-28 14:07:33.685 | DEBUG    | pipecat.processors.frame_processor:link:521 - Linking MediaCommandProcessor#0 -> ReminderProcessor#0
+2026-05-28 14:07:33.686 | DEBUG    | pipecat.processors.frame_processor:link:521 - Linking ReminderProcessor#0 -> CurrentInfoProcessor#0
+2026-05-28 14:07:33.686 | DEBUG    | pipecat.processors.frame_processor:link:521 - Linking CurrentInfoProcessor#0 -> TimeContextProcessor#0
+2026-05-28 14:07:33.686 | DEBUG    | pipecat.processors.frame_processor:link:521 - Linking TimeContextProcessor#0 -> MusicCommandLLMInputBlocker#0
+2026-05-28 14:07:33.687 | DEBUG    | pipecat.processors.frame_processor:link:521 - Linking MusicCommandLLMInputBlocker#0 -> BotTTSMemoryProcessor#0
+2026-05-28 14:07:33.687 | DEBUG    | pipecat.processors.frame_processor:link:521 - Linking BotTTSMemoryProcessor#0 -> RealtimeResponseRouter#0
+2026-05-28 14:07:33.687 | DEBUG    | pipecat.processors.frame_processor:link:521 - Linking RealtimeResponseRouter#0 -> LatencyLogger#1
+2026-05-28 14:07:33.687 | DEBUG    | pipecat.processors.frame_processor:link:521 - Linking LatencyLogger#1 -> RealtimeBotAudioGuard#0
+2026-05-28 14:07:33.688 | DEBUG    | pipecat.processors.frame_processor:link:521 - Linking RealtimeBotAudioGuard#0 -> LocalAudioOutputTransport#0
+2026-05-28 14:07:33.689 | DEBUG    | pipecat.processors.frame_processor:link:521 - Linking LocalAudioOutputTransport#0 -> Pipeline#0::Sink
+2026-05-28 14:07:33.690 | DEBUG    | pipecat.processors.frame_processor:link:521 - Linking PipelineTask#0::Source -> RTVIProcessor#0
+2026-05-28 14:07:33.691 | DEBUG    | pipecat.processors.frame_processor:link:521 - Linking RTVIProcessor#0 -> Pipeline#0
+2026-05-28 14:07:33.691 | DEBUG    | pipecat.processors.frame_processor:link:521 - Linking Pipeline#0 -> PipelineTask#0::Sink
+2026-05-28 14:07:33.692 | DEBUG    | pipecat.pipeline.runner:run:70 - Runner PipelineRunner#0 started running PipelineTask#0
+2026-05-28 14:07:33.693 | DEBUG    | pipecat.pipeline.task:_wait_for_pipeline_start:682 - PipelineTask#0: Starting. Waiting for StartFrame#0 to reach the end of the pipeline...
+2026-05-28 14:07:33.699 | DEBUG    | pipecat.audio.vad.vad_analyzer:set_params:155 - Setting VAD params to: confidence=0.7 start_secs=0.2 stop_secs=0.2 min_volume=0.6
+2026-05-28 14:07:40.728 | DEBUG    | pipecat.pipeline.task:_wait_for_pipeline_start:685 - PipelineTask#0: StartFrame#0 reached the end of the pipeline, pipeline is now ready.
+2026-05-28 14:07:41.019 | DEBUG    | pipecat.processors.frame_processor:broadcast_interruption:697 - OpenAIRealtime2Service#0: broadcasting interruption
+2026-05-28 14:07:41.450 | DEBUG    | tools.audio_guard:remember_bot_tts:31 - AUDIO GUARD REMEMBER BOT TTS: i
+2026-05-28 14:07:41.453 | DEBUG    | tools.audio_guard:remember_bot_tts:31 - AUDIO GUARD REMEMBER BOT TTS: m
+2026-05-28 14:07:41.540 | DEBUG    | tools.audio_guard:remember_bot_tts:31 - AUDIO GUARD REMEMBER BOT TTS: here
+2026-05-28 14:07:41.541 | DEBUG    | tools.audio_guard:remember_bot_tts:31 - AUDIO GUARD REMEMBER BOT TTS: im here
+2026-05-28 14:07:41.934 | DEBUG    | tools.audio_guard:remember_bot_tts:31 - AUDIO GUARD REMEMBER BOT TTS: what
+2026-05-28 14:07:41.934 | DEBUG    | tools.audio_guard:remember_bot_tts:31 - AUDIO GUARD REMEMBER BOT TTS: s
+2026-05-28 14:07:41.935 | DEBUG    | tools.audio_guard:remember_bot_tts:31 - AUDIO GUARD REMEMBER BOT TTS: up
+2026-05-28 14:07:41.936 | DEBUG    | tools.audio_guard:remember_bot_tts:31 - AUDIO GUARD REMEMBER BOT TTS: whats up
+2026-05-28 14:07:41.938 | DEBUG    | pipecat.transports.base_output:_bot_started_speaking:655 - Bot started speaking
+2026-05-28 14:07:41.940 | DEBUG    | tools.audio_guard:mark_bot_speaking_start:40 - AUDIO GUARD BOT SPEAKING START
+2026-05-28 14:07:43.592 | DEBUG    | pipecat.transports.base_output:_handle_frame:749 - Bot stopped speaking based on TTSStoppedFrame
+2026-05-28 14:07:43.592 | DEBUG    | pipecat.transports.base_output:_bot_stopped_speaking:683 - Bot stopped speaking
+2026-05-28 14:07:43.594 | DEBUG    | tools.audio_guard:mark_bot_speaking_end:50 - AUDIO GUARD BOT SPEAKING END cooldown=1.20s
+2026-05-28 14:08:36.060 | WARNING  | pipecat.pipeline.runner:_sig_cancel:135 - Interruption detected. Cancelling runner PipelineRunner#0
+2026-05-28 14:08:36.061 | DEBUG    | pipecat.pipeline.runner:cancel:103 - Cancelling runner PipelineRunner#0
+2026-05-28 14:08:36.061 | DEBUG    | pipecat.pipeline.task:_cancel:615 - Cancelling pipeline task PipelineTask#0
+2026-05-28 14:08:36.061 | DEBUG    | pipecat.pipeline.task:_wait_for_pipeline_end:703 - PipelineTask#0: Closing. Waiting for CancelFrame#0(reason: None) to reach the end of the pipeline...
+2026-05-28 14:08:38.337 | DEBUG    | pipecat.pipeline.task:wait_for_cancel:695 - PipelineTask#0: CancelFrame#0(reason: None) reached the end of the pipeline.
+2026-05-28 14:08:38.347 | DEBUG    | pipecat.pipeline.task:run:563 - Pipeline task PipelineTask#0 is finishing...
+2026-05-28 14:08:38.349 | DEBUG    | pipecat.pipeline.task:run:568 - Pipeline task PipelineTask#0 has finished
+2026-05-28 14:08:38.350 | DEBUG    | pipecat.pipeline.runner:run:94 - Runner PipelineRunner#0 finished running PipelineTask#0
+2026-05-28 14:08:38.352 | DEBUG    | __main__:main:376 - Stopping Echo Assistant cleanup
+2026-05-28 14:47:19.335 | DEBUG    | __main__:main:256 - Starting echo Assistant
+2026-05-28 14:47:19.497 | DEBUG    | pipecat.processors.frame_processor:link:521 - Linking Pipeline#0::Source -> LocalAudioInputTransport#0
+2026-05-28 14:47:19.498 | DEBUG    | pipecat.processors.frame_processor:link:521 - Linking LocalAudioInputTransport#0 -> OpenAIRealtime2Service#0
+2026-05-28 14:47:19.498 | DEBUG    | pipecat.processors.frame_processor:link:521 - Linking OpenAIRealtime2Service#0 -> LocalAudioOutputTransport#0
+2026-05-28 14:47:19.499 | DEBUG    | pipecat.processors.frame_processor:link:521 - Linking LocalAudioOutputTransport#0 -> Pipeline#0::Sink
+2026-05-28 14:47:19.499 | DEBUG    | pipecat.processors.frame_processor:link:521 - Linking PipelineTask#0::Source -> RTVIProcessor#0
+2026-05-28 14:47:19.500 | DEBUG    | pipecat.processors.frame_processor:link:521 - Linking RTVIProcessor#0 -> Pipeline#0
+2026-05-28 14:47:19.500 | DEBUG    | pipecat.processors.frame_processor:link:521 - Linking Pipeline#0 -> PipelineTask#0::Sink
+2026-05-28 14:47:19.500 | DEBUG    | pipecat.pipeline.runner:run:70 - Runner PipelineRunner#0 started running PipelineTask#0
+2026-05-28 14:47:19.501 | DEBUG    | pipecat.pipeline.task:_wait_for_pipeline_start:682 - PipelineTask#0: Starting. Waiting for StartFrame#0 to reach the end of the pipeline...
+2026-05-28 14:47:21.307 | DEBUG    | pipecat.pipeline.task:_wait_for_pipeline_start:685 - PipelineTask#0: StartFrame#0 reached the end of the pipeline, pipeline is now ready.
+2026-05-28 14:47:21.884 | DEBUG    | pipecat.processors.frame_processor:broadcast_interruption:697 - OpenAIRealtime2Service#0: broadcasting interruption
+2026-05-28 14:47:25.146 | DEBUG    | pipecat.transports.base_output:_bot_started_speaking:655 - Bot started speaking
+2026-05-28 14:47:25.624 | INFO     | tools.openai_realtime2:_handle_evt_function_call_arguments_done:200 - REALTIME TOOL CALL: get_local_datetime {}
+2026-05-28 14:47:25.625 | INFO     | tools.openai_realtime2:_handle_evt_function_call_arguments_done:202 - REALTIME TOOL RESULT: Thursday, 28 May 2026, 02:47:25 PM, Asia/Kolkata
+2026-05-28 14:47:26.592 | WARNING  | pipecat.services.openai.realtime.llm:_handle_evt_audio_delta:755 - Received a new audio delta for an already completed audio response before receiving the BotStoppedSpeakingFrame.
+2026-05-28 14:47:26.593 | DEBUG    | pipecat.services.openai.realtime.llm:_handle_evt_audio_delta:758 - Forcing previous audio response to None
+2026-05-28 14:47:27.375 | DEBUG    | pipecat.transports.base_output:_handle_frame:749 - Bot stopped speaking based on TTSStoppedFrame
+2026-05-28 14:47:27.376 | DEBUG    | pipecat.transports.base_output:_bot_stopped_speaking:683 - Bot stopped speaking
+2026-05-28 14:47:27.377 | DEBUG    | pipecat.transports.base_output:_bot_started_speaking:655 - Bot started speaking
+2026-05-28 14:47:29.250 | DEBUG    | pipecat.transports.base_output:_handle_frame:749 - Bot stopped speaking based on TTSStoppedFrame
+2026-05-28 14:47:29.251 | DEBUG    | pipecat.transports.base_output:_bot_stopped_speaking:683 - Bot stopped speaking
+2026-05-28 14:47:31.438 | DEBUG    | pipecat.processors.frame_processor:broadcast_interruption:697 - OpenAIRealtime2Service#0: broadcasting interruption
+2026-05-28 14:47:37.396 | DEBUG    | pipecat.transports.base_output:_bot_started_speaking:655 - Bot started speaking
+2026-05-28 14:47:45.265 | DEBUG    | pipecat.transports.base_output:_handle_frame:749 - Bot stopped speaking based on TTSStoppedFrame
+2026-05-28 14:47:45.266 | DEBUG    | pipecat.transports.base_output:_bot_stopped_speaking:683 - Bot stopped speaking
+2026-05-28 14:47:49.098 | DEBUG    | pipecat.processors.frame_processor:broadcast_interruption:697 - OpenAIRealtime2Service#0: broadcasting interruption
+2026-05-28 14:47:57.864 | DEBUG    | pipecat.transports.base_output:_bot_started_speaking:655 - Bot started speaking
+2026-05-28 14:48:08.770 | DEBUG    | pipecat.transports.base_output:_handle_frame:749 - Bot stopped speaking based on TTSStoppedFrame
+2026-05-28 14:48:08.771 | DEBUG    | pipecat.transports.base_output:_bot_stopped_speaking:683 - Bot stopped speaking
+2026-05-28 14:48:10.111 | DEBUG    | pipecat.processors.frame_processor:broadcast_interruption:697 - OpenAIRealtime2Service#0: broadcasting interruption
+2026-05-28 14:48:14.021 | DEBUG    | pipecat.transports.base_output:_bot_started_speaking:655 - Bot started speaking
+2026-05-28 14:48:26.962 | DEBUG    | pipecat.transports.base_output:_handle_frame:749 - Bot stopped speaking based on TTSStoppedFrame
+2026-05-28 14:48:26.962 | DEBUG    | pipecat.transports.base_output:_bot_stopped_speaking:683 - Bot stopped speaking
+2026-05-28 14:48:29.414 | DEBUG    | pipecat.processors.frame_processor:broadcast_interruption:697 - OpenAIRealtime2Service#0: broadcasting interruption
+2026-05-28 14:48:33.234 | DEBUG    | pipecat.transports.base_output:_bot_started_speaking:655 - Bot started speaking
+2026-05-28 14:48:45.697 | DEBUG    | pipecat.transports.base_output:_handle_frame:749 - Bot stopped speaking based on TTSStoppedFrame
+2026-05-28 14:48:45.697 | DEBUG    | pipecat.transports.base_output:_bot_stopped_speaking:683 - Bot stopped speaking
+2026-05-28 14:48:47.145 | DEBUG    | pipecat.processors.frame_processor:broadcast_interruption:697 - OpenAIRealtime2Service#0: broadcasting interruption
+2026-05-28 14:48:55.482 | DEBUG    | pipecat.transports.base_output:_bot_started_speaking:655 - Bot started speaking
+2026-05-28 14:49:09.367 | DEBUG    | pipecat.transports.base_output:_handle_frame:749 - Bot stopped speaking based on TTSStoppedFrame
+2026-05-28 14:49:09.368 | DEBUG    | pipecat.transports.base_output:_bot_stopped_speaking:683 - Bot stopped speaking
+2026-05-28 14:49:13.598 | DEBUG    | pipecat.processors.frame_processor:broadcast_interruption:697 - OpenAIRealtime2Service#0: broadcasting interruption
+2026-05-28 14:49:16.920 | DEBUG    | pipecat.transports.base_output:_bot_started_speaking:655 - Bot started speaking
+2026-05-28 14:49:17.399 | INFO     | tools.openai_realtime2:_handle_evt_function_call_arguments_done:200 - REALTIME TOOL CALL: control_media {'action': 'play'}
+2026-05-28 14:49:17.490 | INFO     | tools.mpv_player:load_youtube_music_queue:386 - Searching YouTube Music playlists for: english workout songs playlist
+2026-05-28 14:49:18.850 | DEBUG    | pipecat.transports.base_output:_handle_frame:749 - Bot stopped speaking based on TTSStoppedFrame
+2026-05-28 14:49:18.850 | DEBUG    | pipecat.transports.base_output:_bot_stopped_speaking:683 - Bot stopped speaking
+2026-05-28 14:49:19.565 | INFO     | tools.mpv_player:load_youtube_music_queue:416 - Loaded YouTube Music playlist queue: Cardio Pop (100 tracks)
+2026-05-28 14:49:19.567 | INFO     | tools.mpv_player:get_audio_url_from_source:207 - Getting YouTube audio URL for: Kings & Queens by Ava Max
+2026-05-28 14:49:21.987 | INFO     | tools.mpv_player:_start_url:478 - Playing with mpv: Kings & Queens by Ava Max
+2026-05-28 14:49:22.150 | INFO     | tools.openai_realtime2:_handle_evt_function_call_arguments_done:202 - REALTIME TOOL RESULT: Playing Kings & Queens by Ava Max
+2026-05-28 14:49:23.534 | DEBUG    | pipecat.transports.base_output:_bot_started_speaking:655 - Bot started speaking
+2026-05-28 14:49:24.366 | DEBUG    | pipecat.transports.base_output:_handle_frame:749 - Bot stopped speaking based on TTSStoppedFrame
+2026-05-28 14:49:24.367 | DEBUG    | pipecat.transports.base_output:_bot_stopped_speaking:683 - Bot stopped speaking
+2026-05-28 14:49:29.196 | DEBUG    | tools.mpv_player:duck:612 - Ducking mpv volume for user speech
+2026-05-28 14:49:29.198 | DEBUG    | pipecat.processors.frame_processor:broadcast_interruption:697 - OpenAIRealtime2Service#0: broadcasting interruption
+2026-05-28 14:49:34.213 | INFO     | tools.openai_realtime2:_handle_evt_function_call_arguments_done:200 - REALTIME TOOL CALL: control_media {'action': 'next'}
+2026-05-28 14:49:34.215 | INFO     | tools.mpv_player:get_audio_url_from_source:207 - Getting YouTube audio URL for: Don't Be Shy by Tiësto, KAROL G
+2026-05-28 14:49:35.200 | DEBUG    | tools.mpv_player:restore_volume:627 - Restoring mpv volume after user speech
+2026-05-28 14:49:37.010 | INFO     | tools.mpv_player:stop_existing:106 - Stopping existing mpv playback
+2026-05-28 14:49:37.027 | INFO     | tools.mpv_player:_start_url:478 - Playing with mpv: Don't Be Shy by Tiësto, KAROL G
+2026-05-28 14:49:37.132 | INFO     | tools.openai_realtime2:_handle_evt_function_call_arguments_done:202 - REALTIME TOOL RESULT: Playing Don't Be Shy by Tiësto, KAROL G
+2026-05-28 14:49:37.144 | DEBUG    | tools.mpv_player:duck:612 - Ducking mpv volume for user speech
+2026-05-28 14:49:37.148 | DEBUG    | pipecat.processors.frame_processor:broadcast_interruption:697 - OpenAIRealtime2Service#0: broadcasting interruption
+2026-05-28 14:49:37.166 | DEBUG    | pipecat.transports.base_output:_bot_started_speaking:655 - Bot started speaking
+2026-05-28 14:49:37.485 | DEBUG    | pipecat.services.openai.realtime.llm:_receive_task_handler:729 - OpenAIRealtime2Service#0 Conversation already has an active response in progress: resp_DkRBnrWk8UVS2mpw0rjNh. Wait until the response is finished before creating a new one.
+2026-05-28 14:49:41.603 | DEBUG    | pipecat.transports.base_output:_handle_frame:749 - Bot stopped speaking based on TTSStoppedFrame
+2026-05-28 14:49:41.603 | DEBUG    | pipecat.transports.base_output:_bot_stopped_speaking:683 - Bot stopped speaking
+2026-05-28 14:49:43.151 | DEBUG    | tools.mpv_player:restore_volume:627 - Restoring mpv volume after user speech
+2026-05-28 14:49:53.247 | DEBUG    | tools.mpv_player:duck:612 - Ducking mpv volume for user speech
+2026-05-28 14:49:53.249 | DEBUG    | pipecat.processors.frame_processor:broadcast_interruption:697 - OpenAIRealtime2Service#0: broadcasting interruption
+2026-05-28 14:49:54.981 | INFO     | tools.openai_realtime2:_handle_evt_function_call_arguments_done:200 - REALTIME TOOL CALL: control_media {'action': 'stop'}
+2026-05-28 14:49:54.981 | INFO     | tools.mpv_player:stop_existing:106 - Stopping existing mpv playback
+2026-05-28 14:49:54.993 | INFO     | tools.openai_realtime2:_handle_evt_function_call_arguments_done:202 - REALTIME TOOL RESULT: Stopped
+2026-05-28 14:49:55.873 | DEBUG    | pipecat.transports.base_output:_bot_started_speaking:655 - Bot started speaking
+2026-05-28 14:49:56.640 | DEBUG    | pipecat.transports.base_output:_handle_frame:749 - Bot stopped speaking based on TTSStoppedFrame
+2026-05-28 14:49:56.640 | DEBUG    | pipecat.transports.base_output:_bot_stopped_speaking:683 - Bot stopped speaking
+2026-05-28 14:49:58.448 | DEBUG    | pipecat.processors.frame_processor:broadcast_interruption:697 - OpenAIRealtime2Service#0: broadcasting interruption
+2026-05-28 14:50:02.764 | DEBUG    | pipecat.transports.base_output:_bot_started_speaking:655 - Bot started speaking
+2026-05-28 14:50:04.604 | DEBUG    | pipecat.transports.base_output:_handle_frame:749 - Bot stopped speaking based on TTSStoppedFrame
+2026-05-28 14:50:04.604 | DEBUG    | pipecat.transports.base_output:_bot_stopped_speaking:683 - Bot stopped speaking
+2026-05-28 14:51:55.120 | DEBUG    | pipecat.processors.frame_processor:broadcast_interruption:697 - OpenAIRealtime2Service#0: broadcasting interruption
+2026-05-28 14:51:57.514 | DEBUG    | pipecat.transports.base_output:_bot_started_speaking:655 - Bot started speaking
+2026-05-28 14:51:59.151 | DEBUG    | pipecat.transports.base_output:_handle_frame:749 - Bot stopped speaking based on TTSStoppedFrame
+2026-05-28 14:51:59.151 | DEBUG    | pipecat.transports.base_output:_bot_stopped_speaking:683 - Bot stopped speaking
+2026-05-28 14:52:03.014 | DEBUG    | pipecat.processors.frame_processor:broadcast_interruption:697 - OpenAIRealtime2Service#0: broadcasting interruption
+2026-05-28 14:52:06.085 | DEBUG    | pipecat.transports.base_output:_bot_started_speaking:655 - Bot started speaking
+2026-05-28 14:52:07.123 | WARNING  | pipecat.services.openai.realtime.llm:_handle_evt_audio_delta:755 - Received a new audio delta for an already completed audio response before receiving the BotStoppedSpeakingFrame.
+2026-05-28 14:52:07.125 | DEBUG    | pipecat.services.openai.realtime.llm:_handle_evt_audio_delta:758 - Forcing previous audio response to None
+2026-05-28 14:52:12.418 | DEBUG    | pipecat.processors.frame_processor:broadcast_interruption:697 - OpenAIRealtime2Service#0: broadcasting interruption
+2026-05-28 14:52:12.419 | DEBUG    | pipecat.transports.base_output:_bot_stopped_speaking:683 - Bot stopped speaking
+2026-05-28 14:52:13.897 | DEBUG    | pipecat.transports.base_output:_bot_started_speaking:655 - Bot started speaking
+2026-05-28 14:52:14.491 | INFO     | tools.openai_realtime2:_handle_evt_function_call_arguments_done:200 - REALTIME TOOL CALL: get_current_info {'query': 'weather in Hyderabad'}
+2026-05-28 14:52:16.454 | DEBUG    | pipecat.transports.base_output:_handle_frame:749 - Bot stopped speaking based on TTSStoppedFrame
+2026-05-28 14:52:16.454 | DEBUG    | pipecat.transports.base_output:_bot_stopped_speaking:683 - Bot stopped speaking
+2026-05-28 14:52:21.535 | INFO     | tools.openai_realtime2:_handle_evt_function_call_arguments_done:202 - REALTIME TOOL RESULT: Today in Hyderabad, expect mostly sunny skies with a high of 103°F (40°C) and a low of 81°F (27°C). Light rain and thunderstorms are possible in the evening. Tomorrow, anticipate similar conditions with a high of 103°F (40°C) and a low of 81°F (27°C). Light rain and thunderstorms are possible in the evening. Over the weekend, expect sunny skies with highs around 103°F (39°C) and lows near 80°F (27°C). Light rain and thunderstorms are possible in the evening. Next week, expect mostly sunny skies with highs around 100°F (38°C) and lows near 80°F (27°C). Light rain and thunderstorms are possible in the evening.
+2026-05-28 14:52:21.537 | DEBUG    | pipecat.processors.frame_processor:broadcast_interruption:697 - OpenAIRealtime2Service#0: broadcasting interruption
+2026-05-28 14:52:22.672 | DEBUG    | pipecat.transports.base_output:_bot_started_speaking:655 - Bot started speaking
+2026-05-28 14:52:25.284 | WARNING  | pipecat.services.openai.realtime.llm:_handle_evt_audio_delta:755 - Received a new audio delta for an already completed audio response before receiving the BotStoppedSpeakingFrame.
+2026-05-28 14:52:25.284 | DEBUG    | pipecat.services.openai.realtime.llm:_handle_evt_audio_delta:758 - Forcing previous audio response to None
+2026-05-28 14:52:31.283 | DEBUG    | pipecat.transports.base_output:_handle_frame:749 - Bot stopped speaking based on TTSStoppedFrame
+2026-05-28 14:52:31.284 | DEBUG    | pipecat.transports.base_output:_bot_stopped_speaking:683 - Bot stopped speaking
+2026-05-28 14:52:31.285 | DEBUG    | pipecat.transports.base_output:_bot_started_speaking:655 - Bot started speaking
+2026-05-28 14:52:34.242 | DEBUG    | pipecat.transports.base_output:_handle_frame:749 - Bot stopped speaking based on TTSStoppedFrame
+2026-05-28 14:52:34.242 | DEBUG    | pipecat.transports.base_output:_bot_stopped_speaking:683 - Bot stopped speaking
+2026-05-28 14:52:38.514 | DEBUG    | pipecat.processors.frame_processor:broadcast_interruption:697 - OpenAIRealtime2Service#0: broadcasting interruption
+2026-05-28 14:52:42.626 | DEBUG    | pipecat.transports.base_output:_bot_started_speaking:655 - Bot started speaking
+2026-05-28 14:52:43.394 | INFO     | tools.openai_realtime2:_handle_evt_function_call_arguments_done:200 - REALTIME TOOL CALL: get_current_info {'query': 'top 5 news India'}
+2026-05-28 14:52:45.570 | DEBUG    | pipecat.transports.base_output:_handle_frame:749 - Bot stopped speaking based on TTSStoppedFrame
+2026-05-28 14:52:45.570 | DEBUG    | pipecat.transports.base_output:_bot_stopped_speaking:683 - Bot stopped speaking
+2026-05-28 14:52:50.426 | INFO     | tools.openai_realtime2:_handle_evt_function_call_arguments_done:202 - REALTIME TOOL RESULT: The Indian stock market declined on May 27, 2026, with the Sensex falling 142 points to close at 75,867.80 and the Nifty 50 dropping 7 points to 23,907.15. HDFC Bank's shares led the decline, closing 2.63% lower. The India Meteorological Department forecasts a heatwave in central and northwest India for the next few days, with relief expected from May 29. The Union Cabinet approved the Sarthak-PDS scheme, allocating ₹25,530 crores to modernize ration distribution. In Tamil Nadu, AIADMK factions reconciled, with Velumani-led rebel MLAs meeting Chief Minister Palaniswami. Violence erupted outside Pinarayi Vijayan's residence during an Enforcement Directorate raid in a money laundering case.
+2026-05-28 14:52:51.369 | DEBUG    | pipecat.transports.base_output:_bot_started_speaking:655 - Bot started speaking
+2026-05-28 14:53:09.421 | DEBUG    | pipecat.transports.base_output:_handle_frame:749 - Bot stopped speaking based on TTSStoppedFrame
+2026-05-28 14:53:09.421 | DEBUG    | pipecat.transports.base_output:_bot_stopped_speaking:683 - Bot stopped speaking
+2026-05-28 14:53:09.765 | DEBUG    | pipecat.processors.frame_processor:broadcast_interruption:697 - OpenAIRealtime2Service#0: broadcasting interruption
+2026-05-28 14:53:11.339 | INFO     | tools.openai_realtime2:_handle_evt_function_call_arguments_done:200 - REALTIME TOOL CALL: control_media {'action': 'stop'}
+2026-05-28 14:53:11.341 | INFO     | tools.openai_realtime2:_handle_evt_function_call_arguments_done:202 - REALTIME TOOL RESULT: Stopped
+2026-05-28 14:53:12.426 | DEBUG    | pipecat.transports.base_output:_bot_started_speaking:655 - Bot started speaking
+2026-05-28 14:53:13.724 | DEBUG    | pipecat.transports.base_output:_handle_frame:749 - Bot stopped speaking based on TTSStoppedFrame
+2026-05-28 14:53:13.724 | DEBUG    | pipecat.transports.base_output:_bot_stopped_speaking:683 - Bot stopped speaking
+2026-05-28 14:53:20.351 | DEBUG    | pipecat.processors.frame_processor:broadcast_interruption:697 - OpenAIRealtime2Service#0: broadcasting interruption
+2026-05-28 14:53:25.858 | DEBUG    | pipecat.transports.base_output:_bot_started_speaking:655 - Bot started speaking
+2026-05-28 14:53:26.444 | INFO     | tools.openai_realtime2:_handle_evt_function_call_arguments_done:200 - REALTIME TOOL CALL: set_reminder {'request': 'Set a reminder for 30 seconds to check my phone.'}
+2026-05-28 14:53:26.449 | INFO     | tools.openai_realtime2:_handle_evt_function_call_arguments_done:202 - REALTIME TOOL RESULT: I could not understand the reminder time. Ask the user to try a phrase like set alarm in 30 seconds, or remind me at 3:30 PM to call customer.
+2026-05-28 14:53:27.436 | WARNING  | pipecat.services.openai.realtime.llm:_handle_evt_audio_delta:755 - Received a new audio delta for an already completed audio response before receiving the BotStoppedSpeakingFrame.
+2026-05-28 14:53:27.437 | DEBUG    | pipecat.services.openai.realtime.llm:_handle_evt_audio_delta:758 - Forcing previous audio response to None
+2026-05-28 14:53:28.022 | DEBUG    | pipecat.transports.base_output:_handle_frame:749 - Bot stopped speaking based on TTSStoppedFrame
+2026-05-28 14:53:28.023 | DEBUG    | pipecat.transports.base_output:_bot_stopped_speaking:683 - Bot stopped speaking
+2026-05-28 14:53:28.023 | DEBUG    | pipecat.transports.base_output:_bot_started_speaking:655 - Bot started speaking
+2026-05-28 14:53:34.632 | DEBUG    | pipecat.transports.base_output:_handle_frame:749 - Bot stopped speaking based on TTSStoppedFrame
+2026-05-28 14:53:34.632 | DEBUG    | pipecat.transports.base_output:_bot_stopped_speaking:683 - Bot stopped speaking
+2026-05-28 14:53:35.901 | DEBUG    | pipecat.processors.frame_processor:broadcast_interruption:697 - OpenAIRealtime2Service#0: broadcasting interruption
+2026-05-28 14:53:39.556 | DEBUG    | pipecat.transports.base_output:_bot_started_speaking:655 - Bot started speaking
+2026-05-28 14:53:40.012 | INFO     | tools.openai_realtime2:_handle_evt_function_call_arguments_done:200 - REALTIME TOOL CALL: set_reminder {'request': 'Remind me in 30 seconds to check my phone.'}
+2026-05-28 14:53:40.015 | INFO     | tools.reminder_manager:add:90 - Added reminder: check my phone. at 2026-05-28T14:54:10.014403+05:30
+2026-05-28 14:53:40.016 | INFO     | tools.openai_realtime2:_handle_evt_function_call_arguments_done:202 - REALTIME TOOL RESULT: Reminder set for 02:54 PM: check my phone..
+2026-05-28 14:53:40.857 | DEBUG    | pipecat.transports.base_output:_handle_frame:749 - Bot stopped speaking based on TTSStoppedFrame
+2026-05-28 14:53:40.858 | DEBUG    | pipecat.transports.base_output:_bot_stopped_speaking:683 - Bot stopped speaking
+2026-05-28 14:53:40.901 | DEBUG    | pipecat.transports.base_output:_bot_started_speaking:655 - Bot started speaking
+2026-05-28 14:53:43.994 | DEBUG    | pipecat.transports.base_output:_handle_frame:749 - Bot stopped speaking based on TTSStoppedFrame
+2026-05-28 14:53:43.995 | DEBUG    | pipecat.transports.base_output:_bot_stopped_speaking:683 - Bot stopped speaking
+2026-05-28 14:54:10.320 | INFO     | __main__:reminder_loop:238 - REMINDER DUE: Reminder: check my phone.
+2026-05-28 14:54:10.323 | INFO     | __main__:reminder_loop:243 - REMINDER SPOKEN: 192373c8-bcfb-4f20-bd7b-80ed32cb1b5b
+2026-05-28 14:54:11.346 | DEBUG    | pipecat.transports.base_output:_bot_started_speaking:655 - Bot started speaking
+2026-05-28 14:54:13.111 | DEBUG    | pipecat.transports.base_output:_handle_frame:749 - Bot stopped speaking based on TTSStoppedFrame
+2026-05-28 14:54:13.111 | DEBUG    | pipecat.transports.base_output:_bot_stopped_speaking:683 - Bot stopped speaking
+2026-05-28 14:54:19.746 | DEBUG    | pipecat.processors.frame_processor:broadcast_interruption:697 - OpenAIRealtime2Service#0: broadcasting interruption
+2026-05-28 14:54:25.059 | DEBUG    | pipecat.transports.base_output:_bot_started_speaking:655 - Bot started speaking
+2026-05-28 14:54:25.596 | INFO     | tools.openai_realtime2:_handle_evt_function_call_arguments_done:200 - REALTIME TOOL CALL: set_reminder {'request': 'Echo set an alarm for 2:55 PM.'}
+2026-05-28 14:54:25.599 | INFO     | tools.reminder_manager:add:90 - Added alarm: Alarm at 2026-05-28T14:55:00+05:30
+2026-05-28 14:54:25.600 | INFO     | tools.openai_realtime2:_handle_evt_function_call_arguments_done:202 - REALTIME TOOL RESULT: Alarm set for 02:55 PM.
+2026-05-28 14:54:26.725 | WARNING  | pipecat.services.openai.realtime.llm:_handle_evt_audio_delta:755 - Received a new audio delta for an already completed audio response before receiving the BotStoppedSpeakingFrame.
+2026-05-28 14:54:26.726 | DEBUG    | pipecat.services.openai.realtime.llm:_handle_evt_audio_delta:758 - Forcing previous audio response to None
+2026-05-28 14:54:27.221 | DEBUG    | pipecat.transports.base_output:_handle_frame:749 - Bot stopped speaking based on TTSStoppedFrame
+2026-05-28 14:54:27.221 | DEBUG    | pipecat.transports.base_output:_bot_stopped_speaking:683 - Bot stopped speaking
+2026-05-28 14:54:27.222 | DEBUG    | pipecat.transports.base_output:_bot_started_speaking:655 - Bot started speaking
+2026-05-28 14:54:29.532 | DEBUG    | pipecat.transports.base_output:_handle_frame:749 - Bot stopped speaking based on TTSStoppedFrame
+2026-05-28 14:54:29.532 | DEBUG    | pipecat.transports.base_output:_bot_stopped_speaking:683 - Bot stopped speaking
+2026-05-28 14:55:00.422 | INFO     | __main__:reminder_loop:238 - REMINDER DUE: Alarm ringing. Alarm ringing.
+2026-05-28 14:55:00.424 | INFO     | __main__:reminder_loop:243 - REMINDER SPOKEN: 4770d61a-6bea-4f79-bc8c-75b66bc27e72
+2026-05-28 14:55:01.233 | DEBUG    | pipecat.transports.base_output:_bot_started_speaking:655 - Bot started speaking
+2026-05-28 14:55:03.394 | DEBUG    | pipecat.transports.base_output:_handle_frame:749 - Bot stopped speaking based on TTSStoppedFrame
+2026-05-28 14:55:03.395 | DEBUG    | pipecat.transports.base_output:_bot_stopped_speaking:683 - Bot stopped speaking
+2026-05-28 14:55:18.929 | DEBUG    | pipecat.processors.frame_processor:broadcast_interruption:697 - OpenAIRealtime2Service#0: broadcasting interruption
+2026-05-28 14:55:24.137 | DEBUG    | pipecat.transports.base_output:_bot_started_speaking:655 - Bot started speaking
+2026-05-28 14:55:38.268 | DEBUG    | pipecat.transports.base_output:_handle_frame:749 - Bot stopped speaking based on TTSStoppedFrame
+2026-05-28 14:55:38.269 | DEBUG    | pipecat.transports.base_output:_bot_stopped_speaking:683 - Bot stopped speaking
+2026-05-28 15:00:38.233 | WARNING  | pipecat.pipeline.task:_idle_timeout_detected:938 - Idle timeout detected.
+2026-05-28 15:00:38.233 | WARNING  | pipecat.pipeline.task:_idle_timeout_detected:941 - Idle pipeline detected, cancelling pipeline task...
+2026-05-28 15:00:38.233 | DEBUG    | pipecat.pipeline.task:_cancel:615 - Cancelling pipeline task PipelineTask#0
+2026-05-28 15:00:38.234 | DEBUG    | pipecat.pipeline.task:_wait_for_pipeline_end:703 - PipelineTask#0: Closing. Waiting for CancelFrame#0(reason: None) to reach the end of the pipeline...
+2026-05-28 15:00:40.511 | DEBUG    | pipecat.pipeline.task:wait_for_cancel:695 - PipelineTask#0: CancelFrame#0(reason: None) reached the end of the pipeline.
+2026-05-28 15:00:40.525 | DEBUG    | pipecat.pipeline.task:run:563 - Pipeline task PipelineTask#0 is finishing...
+2026-05-28 15:00:40.525 | DEBUG    | pipecat.pipeline.task:run:568 - Pipeline task PipelineTask#0 has finished
+2026-05-28 15:00:40.526 | DEBUG    | pipecat.pipeline.runner:run:94 - Runner PipelineRunner#0 finished running PipelineTask#0
+2026-05-28 15:00:40.527 | DEBUG    | __main__:main:347 - Stopping Echo Assistant cleanup
+2026-05-28 15:41:09.089 | DEBUG    | __main__:main:61 - Starting echo Assistant
+2026-05-28 15:41:09.271 | DEBUG    | pipecat.processors.frame_processor:link:521 - Linking Pipeline#0::Source -> LocalAudioInputTransport#0
+2026-05-28 15:41:09.271 | DEBUG    | pipecat.processors.frame_processor:link:521 - Linking LocalAudioInputTransport#0 -> OpenAIRealtime2Service#0
+2026-05-28 15:41:09.271 | DEBUG    | pipecat.processors.frame_processor:link:521 - Linking OpenAIRealtime2Service#0 -> LocalAudioOutputTransport#0
+2026-05-28 15:41:09.271 | DEBUG    | pipecat.processors.frame_processor:link:521 - Linking LocalAudioOutputTransport#0 -> Pipeline#0::Sink
+2026-05-28 15:41:09.272 | DEBUG    | pipecat.processors.frame_processor:link:521 - Linking PipelineTask#0::Source -> RTVIProcessor#0
+2026-05-28 15:41:09.273 | DEBUG    | pipecat.processors.frame_processor:link:521 - Linking RTVIProcessor#0 -> Pipeline#0
+2026-05-28 15:41:09.273 | DEBUG    | pipecat.processors.frame_processor:link:521 - Linking Pipeline#0 -> PipelineTask#0::Sink
+2026-05-28 15:41:09.274 | DEBUG    | pipecat.pipeline.runner:run:70 - Runner PipelineRunner#0 started running PipelineTask#0
+2026-05-28 15:41:09.275 | DEBUG    | pipecat.pipeline.task:_wait_for_pipeline_start:682 - PipelineTask#0: Starting. Waiting for StartFrame#0 to reach the end of the pipeline...
+2026-05-28 15:41:11.202 | DEBUG    | pipecat.pipeline.task:_wait_for_pipeline_start:685 - PipelineTask#0: StartFrame#0 reached the end of the pipeline, pipeline is now ready.
+2026-05-28 15:41:15.055 | INFO     | tools.openai_realtime2:handle_evt_input_audio_transcription_completed:202 - REALTIME GATE IGNORED: wake_only transcript='Echo.'
+2026-05-28 15:41:27.198 | INFO     | tools.openai_realtime2:handle_evt_input_audio_transcription_completed:202 - REALTIME GATE IGNORED: wake_only transcript='Echo'
+2026-05-28 15:41:33.554 | INFO     | tools.openai_realtime2:handle_evt_input_audio_transcription_completed:210 - REALTIME GATE ACCEPTED: normal_turn transcript='Hi, can you help me?'
+2026-05-28 15:41:34.482 | DEBUG    | pipecat.transports.base_output:_bot_started_speaking:655 - Bot started speaking
+2026-05-28 15:41:37.569 | DEBUG    | pipecat.transports.base_output:_handle_frame:749 - Bot stopped speaking based on TTSStoppedFrame
+2026-05-28 15:41:37.570 | DEBUG    | pipecat.transports.base_output:_bot_stopped_speaking:683 - Bot stopped speaking
+2026-05-28 15:41:49.770 | INFO     | tools.openai_realtime2:handle_evt_input_audio_transcription_completed:210 - REALTIME GATE ACCEPTED: normal_turn transcript="Why can't you hear my echo wakeup call?"
+2026-05-28 15:41:50.647 | DEBUG    | pipecat.transports.base_output:_bot_started_speaking:655 - Bot started speaking
+2026-05-28 15:41:59.583 | DEBUG    | pipecat.transports.base_output:_handle_frame:749 - Bot stopped speaking based on TTSStoppedFrame
+2026-05-28 15:41:59.583 | DEBUG    | pipecat.transports.base_output:_bot_stopped_speaking:683 - Bot stopped speaking
+2026-05-28 15:42:06.039 | INFO     | tools.openai_realtime2:handle_evt_input_audio_transcription_completed:210 - REALTIME GATE ACCEPTED: normal_turn transcript='But what if I play music and you listen to lyrics and start talking to me?'
+2026-05-28 15:42:07.551 | DEBUG    | pipecat.transports.base_output:_bot_started_speaking:655 - Bot started speaking
+2026-05-28 15:42:07.581 | INFO     | tools.openai_realtime2:handle_evt_input_audio_transcription_completed:202 - REALTIME GATE IGNORED: bot_speaking transcript="Thinking that's me."
+2026-05-28 15:42:08.188 | WARNING  | pipecat.services.openai.realtime.llm:_handle_evt_audio_delta:755 - Received a new audio delta for an already completed audio response before receiving the BotStoppedSpeakingFrame.
+2026-05-28 15:42:08.188 | DEBUG    | pipecat.services.openai.realtime.llm:_handle_evt_audio_delta:758 - Forcing previous audio response to None
+2026-05-28 15:42:20.053 | DEBUG    | pipecat.transports.base_output:_handle_frame:749 - Bot stopped speaking based on TTSStoppedFrame
+2026-05-28 15:42:20.053 | DEBUG    | pipecat.transports.base_output:_bot_stopped_speaking:683 - Bot stopped speaking
+2026-05-28 15:47:19.880 | WARNING  | pipecat.pipeline.task:_idle_timeout_detected:938 - Idle timeout detected.
+2026-05-28 15:47:19.880 | WARNING  | pipecat.pipeline.task:_idle_timeout_detected:941 - Idle pipeline detected, cancelling pipeline task...
+2026-05-28 15:47:19.880 | DEBUG    | pipecat.pipeline.task:_cancel:615 - Cancelling pipeline task PipelineTask#0
+2026-05-28 15:47:19.881 | DEBUG    | pipecat.pipeline.task:_wait_for_pipeline_end:703 - PipelineTask#0: Closing. Waiting for CancelFrame#0(reason: None) to reach the end of the pipeline...
+2026-05-28 15:47:22.173 | DEBUG    | pipecat.pipeline.task:wait_for_cancel:695 - PipelineTask#0: CancelFrame#0(reason: None) reached the end of the pipeline.
+2026-05-28 15:47:22.184 | DEBUG    | pipecat.pipeline.task:run:563 - Pipeline task PipelineTask#0 is finishing...
+2026-05-28 15:47:22.184 | DEBUG    | pipecat.pipeline.task:run:568 - Pipeline task PipelineTask#0 has finished
+2026-05-28 15:47:22.185 | DEBUG    | pipecat.pipeline.runner:run:94 - Runner PipelineRunner#0 finished running PipelineTask#0
+2026-05-28 15:47:22.185 | DEBUG    | __main__:main:151 - Stopping Echo Assistant cleanup
+2026-05-28 17:44:17.013 | DEBUG    | __main__:main:61 - Starting echo Assistant
+2026-05-28 17:44:17.133 | DEBUG    | pipecat.processors.frame_processor:link:521 - Linking Pipeline#0::Source -> LocalAudioInputTransport#0
+2026-05-28 17:44:17.134 | DEBUG    | pipecat.processors.frame_processor:link:521 - Linking LocalAudioInputTransport#0 -> OpenAIRealtime2Service#0
+2026-05-28 17:44:17.135 | DEBUG    | pipecat.processors.frame_processor:link:521 - Linking OpenAIRealtime2Service#0 -> LocalAudioOutputTransport#0
+2026-05-28 17:44:17.135 | DEBUG    | pipecat.processors.frame_processor:link:521 - Linking LocalAudioOutputTransport#0 -> Pipeline#0::Sink
+2026-05-28 17:44:17.135 | DEBUG    | pipecat.processors.frame_processor:link:521 - Linking PipelineTask#0::Source -> RTVIProcessor#0
+2026-05-28 17:44:17.136 | DEBUG    | pipecat.processors.frame_processor:link:521 - Linking RTVIProcessor#0 -> Pipeline#0
+2026-05-28 17:44:17.136 | DEBUG    | pipecat.processors.frame_processor:link:521 - Linking Pipeline#0 -> PipelineTask#0::Sink
+2026-05-28 17:44:17.137 | DEBUG    | pipecat.pipeline.runner:run:70 - Runner PipelineRunner#0 started running PipelineTask#0
+2026-05-28 17:44:17.138 | DEBUG    | pipecat.pipeline.task:_wait_for_pipeline_start:682 - PipelineTask#0: Starting. Waiting for StartFrame#0 to reach the end of the pipeline...
+2026-05-28 17:44:19.013 | DEBUG    | pipecat.pipeline.task:_wait_for_pipeline_start:685 - PipelineTask#0: StartFrame#0 reached the end of the pipeline, pipeline is now ready.
+2026-05-28 17:44:21.852 | INFO     | tools.openai_realtime2:handle_evt_input_audio_transcription_completed:210 - REALTIME GATE ACCEPTED: wake_command transcript='Echo voice assistant commands, reminders, alarms, media controls, weather, news, and current information.'
+2026-05-28 17:44:22.763 | DEBUG    | pipecat.transports.base_output:_bot_started_speaking:655 - Bot started speaking
+2026-05-28 17:44:23.099 | INFO     | tools.openai_realtime2:handle_evt_input_audio_transcription_completed:202 - REALTIME GATE IGNORED: bot_speaking transcript='Echo'
+2026-05-28 17:44:40.638 | DEBUG    | pipecat.transports.base_output:_handle_frame:749 - Bot stopped speaking based on TTSStoppedFrame
+2026-05-28 17:44:40.638 | DEBUG    | pipecat.transports.base_output:_bot_stopped_speaking:683 - Bot stopped speaking
+2026-05-28 17:44:54.080 | INFO     | tools.openai_realtime2:handle_evt_input_audio_transcription_completed:210 - REALTIME GATE ACCEPTED: wake_command transcript='Echo play songs'
+2026-05-28 17:44:54.831 | DEBUG    | pipecat.transports.base_output:_bot_started_speaking:655 - Bot started speaking
+2026-05-28 17:44:55.330 | INFO     | tools.openai_realtime2:_handle_evt_function_call_arguments_done:276 - REALTIME TOOL CALL: control_media {'action': 'play'}
+2026-05-28 17:44:55.392 | INFO     | tools.mpv_player:load_youtube_music_queue:386 - Searching YouTube Music playlists for: us uk pop hits playlist
+2026-05-28 17:44:56.528 | INFO     | tools.mpv_player:load_youtube_music_queue:386 - Searching YouTube Music playlists for: english radio hits playlist
+2026-05-28 17:44:56.892 | INFO     | tools.mpv_player:load_youtube_music_queue:386 - Searching YouTube Music playlists for: english party songs playlist
+2026-05-28 17:44:57.025 | DEBUG    | pipecat.transports.base_output:_handle_frame:749 - Bot stopped speaking based on TTSStoppedFrame
+2026-05-28 17:44:57.025 | DEBUG    | pipecat.transports.base_output:_bot_stopped_speaking:683 - Bot stopped speaking
+2026-05-28 17:44:57.329 | INFO     | tools.mpv_player:load_youtube_music_queue:386 - Searching YouTube Music playlists for: english songs playlist
+2026-05-28 17:44:57.757 | INFO     | tools.mpv_player:load_youtube_music_queue:386 - Searching YouTube Music playlists for: english workout songs playlist
+2026-05-28 17:44:58.345 | INFO     | tools.mpv_player:load_youtube_music_queue:386 - Searching YouTube Music playlists for: english chill songs playlist
+2026-05-28 17:44:58.722 | INFO     | tools.mpv_player:load_youtube_music_queue:386 - Searching YouTube Music playlists for: top english songs playlist
+2026-05-28 17:44:59.170 | INFO     | tools.mpv_player:load_youtube_music_queue:386 - Searching YouTube Music playlists for: english pop hits playlist
+2026-05-28 17:44:59.555 | WARNING  | tools.mpv_player:play_default_music:457 - Falling back to yt-dlp search for default music
+2026-05-28 17:44:59.555 | INFO     | tools.mpv_player:get_audio_url_from_source:207 - Getting YouTube audio URL for: english language pop hits playlist usa uk songs -korean -kpop
+2026-05-28 17:45:12.194 | INFO     | tools.mpv_player:_start_url:478 - Playing with mpv: english language pop hits playlist usa uk songs -korean -kpop
+2026-05-28 17:45:12.297 | INFO     | tools.openai_realtime2:_handle_evt_function_call_arguments_done:278 - REALTIME TOOL RESULT: Playing english language pop hits playlist usa uk songs -korean -kpop
+2026-05-28 17:45:13.147 | DEBUG    | pipecat.transports.base_output:_bot_started_speaking:655 - Bot started speaking
+2026-05-28 17:45:15.285 | DEBUG    | pipecat.transports.base_output:_handle_frame:749 - Bot stopped speaking based on TTSStoppedFrame
+2026-05-28 17:45:15.285 | DEBUG    | pipecat.transports.base_output:_bot_stopped_speaking:683 - Bot stopped speaking
+2026-05-28 17:45:25.025 | DEBUG    | tools.mpv_player:duck:612 - Ducking mpv volume for user speech
+2026-05-28 17:45:26.575 | INFO     | tools.openai_realtime2:handle_evt_input_audio_transcription_completed:210 - REALTIME GATE ACCEPTED: wake_command transcript='Echo pause.'
+2026-05-28 17:45:27.333 | DEBUG    | pipecat.transports.base_output:_bot_started_speaking:655 - Bot started speaking
+2026-05-28 17:45:27.780 | INFO     | tools.openai_realtime2:_handle_evt_function_call_arguments_done:276 - REALTIME TOOL CALL: control_media {'action': 'pause'}
+2026-05-28 17:45:27.785 | INFO     | tools.openai_realtime2:_handle_evt_function_call_arguments_done:278 - REALTIME TOOL RESULT: Paused
+2026-05-28 17:45:28.494 | WARNING  | pipecat.services.openai.realtime.llm:_handle_evt_audio_delta:755 - Received a new audio delta for an already completed audio response before receiving the BotStoppedSpeakingFrame.
+2026-05-28 17:45:28.494 | DEBUG    | pipecat.services.openai.realtime.llm:_handle_evt_audio_delta:758 - Forcing previous audio response to None
+2026-05-28 17:45:29.467 | DEBUG    | pipecat.transports.base_output:_handle_frame:749 - Bot stopped speaking based on TTSStoppedFrame
+2026-05-28 17:45:29.467 | DEBUG    | pipecat.transports.base_output:_bot_stopped_speaking:683 - Bot stopped speaking
+2026-05-28 17:45:29.467 | DEBUG    | pipecat.transports.base_output:_bot_started_speaking:655 - Bot started speaking
+2026-05-28 17:45:30.275 | DEBUG    | pipecat.transports.base_output:_handle_frame:749 - Bot stopped speaking based on TTSStoppedFrame
+2026-05-28 17:45:30.275 | DEBUG    | pipecat.transports.base_output:_bot_stopped_speaking:683 - Bot stopped speaking
+2026-05-28 17:45:31.028 | DEBUG    | tools.mpv_player:restore_volume:627 - Restoring mpv volume after user speech
+2026-05-28 17:45:36.044 | INFO     | tools.openai_realtime2:handle_evt_input_audio_transcription_completed:210 - REALTIME GATE ACCEPTED: normal_turn transcript='Play next song.'
+2026-05-28 17:45:37.348 | DEBUG    | pipecat.transports.base_output:_bot_started_speaking:655 - Bot started speaking
+2026-05-28 17:45:37.919 | INFO     | tools.openai_realtime2:_handle_evt_function_call_arguments_done:276 - REALTIME TOOL CALL: control_media {'action': 'next'}
+2026-05-28 17:45:37.920 | INFO     | tools.mpv_player:get_audio_url_from_source:207 - Getting YouTube audio URL for: english language pop hits playlist usa uk songs -korean -kpop
+2026-05-28 17:45:39.757 | DEBUG    | pipecat.transports.base_output:_handle_frame:749 - Bot stopped speaking based on TTSStoppedFrame
+2026-05-28 17:45:39.758 | DEBUG    | pipecat.transports.base_output:_bot_stopped_speaking:683 - Bot stopped speaking
+2026-05-28 17:45:51.588 | INFO     | tools.mpv_player:stop_existing:106 - Stopping existing mpv playback
+2026-05-28 17:45:51.598 | INFO     | tools.mpv_player:_start_url:478 - Playing with mpv: english language pop hits playlist usa uk songs -korean -kpop
+2026-05-28 17:45:51.700 | INFO     | tools.openai_realtime2:_handle_evt_function_call_arguments_done:278 - REALTIME TOOL RESULT: Playing english language pop hits playlist usa uk songs -korean -kpop
+2026-05-28 17:45:52.491 | DEBUG    | pipecat.transports.base_output:_bot_started_speaking:655 - Bot started speaking
+2026-05-28 17:45:54.212 | DEBUG    | pipecat.transports.base_output:_handle_frame:749 - Bot stopped speaking based on TTSStoppedFrame
+2026-05-28 17:45:54.213 | DEBUG    | pipecat.transports.base_output:_bot_stopped_speaking:683 - Bot stopped speaking
+2026-05-28 17:46:10.879 | DEBUG    | tools.mpv_player:duck:612 - Ducking mpv volume for user speech
+2026-05-28 17:46:16.275 | INFO     | tools.openai_realtime2:handle_evt_input_audio_transcription_completed:210 - REALTIME GATE ACCEPTED: wake_command transcript="Echo tell me today's top news of India."
+2026-05-28 17:46:17.214 | DEBUG    | pipecat.transports.base_output:_bot_started_speaking:655 - Bot started speaking
+2026-05-28 17:46:18.455 | INFO     | tools.openai_realtime2:_handle_evt_function_call_arguments_done:276 - REALTIME TOOL CALL: get_current_info {'query': "today's top news of India"}
+2026-05-28 17:46:19.746 | DEBUG    | pipecat.transports.base_output:_handle_frame:749 - Bot stopped speaking based on TTSStoppedFrame
+2026-05-28 17:46:19.746 | DEBUG    | pipecat.transports.base_output:_bot_stopped_speaking:683 - Bot stopped speaking
+2026-05-28 17:46:22.414 | DEBUG    | tools.mpv_player:restore_volume:627 - Restoring mpv volume after user speech
+2026-05-28 17:46:25.915 | INFO     | tools.openai_realtime2:_handle_evt_function_call_arguments_done:278 - REALTIME TOOL RESULT: India is experiencing a severe heatwave, with temperatures reaching up to 48.2°C in Rajasthan. The India Meteorological Department has issued a red alert for heatwave conditions in several states, including Delhi, Rajasthan, Uttar Pradesh, and Madhya Pradesh, expected to persist until at least May 29. In response, Prime Minister Narendra Modi has urged citizens to take necessary precautions. In Delhi, light rain and thunderstorms are forecasted to provide some relief, with temperatures expected to drop to 35-37°C by Friday. The stock market ended lower amid selling in select heavyweights, with the Sensex slipping 142 points to close at 75,867.80. Additionally, Bakrid (Eid al-Adha) is being observed today, leading to bank holidays in various cities and a closure of stock exchanges.
+2026-05-28 17:46:25.922 | INFO     | tools.openai_realtime2:handle_evt_input_audio_transcription_completed:210 - REALTIME GATE ACCEPTED: wake_command transcript='Echo voice assistant commands, reminders, alarms, media controls, weather, news, and current information.'
+2026-05-28 17:46:26.266 | DEBUG    | pipecat.services.openai.realtime.llm:_receive_task_handler:729 - OpenAIRealtime2Service#0 Conversation already has an active response in progress: resp_DkTwxIS2mOFUog9eHIIqL. Wait until the response is finished before creating a new one.
+2026-05-28 17:46:26.759 | DEBUG    | pipecat.transports.base_output:_bot_started_speaking:655 - Bot started speaking
+2026-05-28 17:46:34.291 | DEBUG    | tools.mpv_player:duck:612 - Ducking mpv volume for user speech
+2026-05-28 17:46:39.242 | INFO     | tools.openai_realtime2:handle_evt_input_audio_transcription_completed:202 - REALTIME GATE IGNORED: music_playing_without_wake transcript='Music is still playing. Please pause the music and tell me the news.'
+2026-05-28 17:46:40.293 | DEBUG    | tools.mpv_player:restore_volume:627 - Restoring mpv volume after user speech
+2026-05-28 17:46:45.490 | DEBUG    | pipecat.transports.base_output:_handle_frame:749 - Bot stopped speaking based on TTSStoppedFrame
+2026-05-28 17:46:45.491 | DEBUG    | pipecat.transports.base_output:_bot_stopped_speaking:683 - Bot stopped speaking
+2026-05-28 17:46:49.419 | DEBUG    | tools.mpv_player:duck:612 - Ducking mpv volume for user speech
+2026-05-28 17:46:50.956 | INFO     | tools.openai_realtime2:handle_evt_input_audio_transcription_completed:210 - REALTIME GATE ACCEPTED: wake_command transcript='Echo pause'
+2026-05-28 17:46:51.825 | DEBUG    | pipecat.transports.base_output:_bot_started_speaking:655 - Bot started speaking
+2026-05-28 17:46:52.336 | INFO     | tools.openai_realtime2:_handle_evt_function_call_arguments_done:276 - REALTIME TOOL CALL: control_media {'action': 'pause'}
+2026-05-28 17:46:52.339 | INFO     | tools.openai_realtime2:_handle_evt_function_call_arguments_done:278 - REALTIME TOOL RESULT: Paused
+2026-05-28 17:46:53.520 | WARNING  | pipecat.services.openai.realtime.llm:_handle_evt_audio_delta:755 - Received a new audio delta for an already completed audio response before receiving the BotStoppedSpeakingFrame.
+2026-05-28 17:46:53.520 | DEBUG    | pipecat.services.openai.realtime.llm:_handle_evt_audio_delta:758 - Forcing previous audio response to None
+2026-05-28 17:46:53.616 | DEBUG    | pipecat.transports.base_output:_handle_frame:749 - Bot stopped speaking based on TTSStoppedFrame
+2026-05-28 17:46:53.616 | DEBUG    | pipecat.transports.base_output:_bot_stopped_speaking:683 - Bot stopped speaking
+2026-05-28 17:46:53.617 | DEBUG    | pipecat.transports.base_output:_bot_started_speaking:655 - Bot started speaking
+2026-05-28 17:46:54.354 | DEBUG    | pipecat.transports.base_output:_handle_frame:749 - Bot stopped speaking based on TTSStoppedFrame
+2026-05-28 17:46:54.355 | DEBUG    | pipecat.transports.base_output:_bot_stopped_speaking:683 - Bot stopped speaking
+2026-05-28 17:46:55.422 | DEBUG    | tools.mpv_player:restore_volume:627 - Restoring mpv volume after user speech
+2026-05-28 17:46:59.928 | INFO     | tools.openai_realtime2:handle_evt_input_audio_transcription_completed:210 - REALTIME GATE ACCEPTED: normal_turn transcript='Start continuing telling me the news.'
+2026-05-28 17:47:01.245 | DEBUG    | pipecat.transports.base_output:_bot_started_speaking:655 - Bot started speaking
+2026-05-28 17:47:02.165 | INFO     | tools.openai_realtime2:_handle_evt_function_call_arguments_done:276 - REALTIME TOOL CALL: get_current_info {'query': 'more top news from India today'}
+2026-05-28 17:47:04.238 | DEBUG    | pipecat.transports.base_output:_handle_frame:749 - Bot stopped speaking based on TTSStoppedFrame
+2026-05-28 17:47:04.238 | DEBUG    | pipecat.transports.base_output:_bot_stopped_speaking:683 - Bot stopped speaking
+2026-05-28 17:47:07.728 | INFO     | tools.openai_realtime2:_handle_evt_function_call_arguments_done:278 - REALTIME TOOL RESULT: Security has been heightened across India ahead of Eid-ul-Adha celebrations due to scattered disputes over religious practices.
+Extreme heatwave conditions are expected to persist in North India until May 29, with temperatures reaching up to 48.2°C in Rajasthan.
+The Indian stock market ended lower amid selling in select heavyweights, with the Sensex slipping 142 points to close at 75,867.80.
+India and China held constructive talks on border management and trans-border rivers, reviewing the situation along the Line of Actual Control.
+The India Meteorological Department has warned of severe heatwave conditions continuing over central and northwest India for the next two to three days.
+2026-05-28 17:47:08.659 | DEBUG    | pipecat.transports.base_output:_bot_started_speaking:655 - Bot started speaking
+2026-05-28 17:47:20.528 | DEBUG    | pipecat.transports.base_output:_handle_frame:749 - Bot stopped speaking based on TTSStoppedFrame
+2026-05-28 17:47:20.528 | DEBUG    | pipecat.transports.base_output:_bot_stopped_speaking:683 - Bot stopped speaking
+2026-05-28 17:47:46.768 | WARNING  | pipecat.pipeline.runner:_sig_cancel:135 - Interruption detected. Cancelling runner PipelineRunner#0
+2026-05-28 17:47:46.769 | DEBUG    | pipecat.pipeline.runner:cancel:103 - Cancelling runner PipelineRunner#0
+2026-05-28 17:47:46.769 | DEBUG    | pipecat.pipeline.task:_cancel:615 - Cancelling pipeline task PipelineTask#0
+2026-05-28 17:47:46.770 | DEBUG    | pipecat.pipeline.task:_wait_for_pipeline_end:703 - PipelineTask#0: Closing. Waiting for CancelFrame#0(reason: None) to reach the end of the pipeline...
+2026-05-28 17:47:49.033 | DEBUG    | pipecat.pipeline.task:wait_for_cancel:695 - PipelineTask#0: CancelFrame#0(reason: None) reached the end of the pipeline.
+2026-05-28 17:47:49.040 | DEBUG    | pipecat.pipeline.task:run:563 - Pipeline task PipelineTask#0 is finishing...
+2026-05-28 17:47:49.043 | DEBUG    | pipecat.pipeline.task:run:568 - Pipeline task PipelineTask#0 has finished
+2026-05-28 17:47:49.043 | DEBUG    | pipecat.pipeline.runner:run:94 - Runner PipelineRunner#0 finished running PipelineTask#0
+2026-05-28 17:47:49.044 | DEBUG    | __main__:main:151 - Stopping Echo Assistant cleanup
+2026-05-28 17:47:49.044 | INFO     | tools.mpv_player:stop_existing:106 - Stopping existing mpv playback
