@@ -17,8 +17,8 @@ test_tts.py
 *.pyc
 __pycache__/
 
-# Sherpa ONNX models (large binaries)
-backend/models/sherpa/
+# Model artifacts
+**/models/
 
 # Temporary audio and cache
 backend/tmp/
