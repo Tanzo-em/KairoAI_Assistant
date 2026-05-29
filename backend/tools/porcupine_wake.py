@@ -54,7 +54,7 @@ class PorcupineWakeListener:
                     sensitivities=[0.65],
                 )
             else:
-                logger.warning("Custom Echo .ppn not found. Using built-in keyword: computer")
+                logger.warning("Custom Riko .ppn not found. Using built-in keyword: computer")
                 self.porcupine = pvporcupine.create(
                     access_key=self.access_key,
                     keywords=["computer"],
@@ -128,7 +128,7 @@ class PorcupineWakeListener:
                         import asyncio
                         loop = asyncio.new_event_loop()
                         loop.run_until_complete(
-                            set_ui_status("listening", "Echo is listening")
+                            set_ui_status("listening", "Riko is listening")
                         )
                         loop.close()
                     except Exception as e:

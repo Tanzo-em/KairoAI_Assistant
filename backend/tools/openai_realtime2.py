@@ -88,7 +88,7 @@ class RealtimeLocalTools:
             {
                 "type": "function",
                 "name": "get_local_datetime",
-                "description": "Get Echo's current local date and time.",
+                "description": "Get Riko's current local date and time.",
                 "parameters": {
                     "type": "object",
                     "properties": {},
@@ -233,7 +233,7 @@ class OpenAIRealtime2Service(OpenAIRealtimeLLMService):
     def _strip_wake_phrase(self, transcript: str) -> str:
         text = transcript.strip()
         text = re.sub(
-            r"^\s*(?:hey\s+|hello\s+|ok\s+|okay\s+)?echo[\s,.:;!?-]*",
+            r"^\s*(?:hey\s+|hello\s+|ok\s+|okay\s+)?riko[\s,.:;!?-]*",
             "",
             text,
             flags=re.IGNORECASE,

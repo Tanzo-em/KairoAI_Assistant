@@ -55,7 +55,7 @@ def is_bot_speaking() -> bool:
         return _speaking_count > 0 or time.time() < _speaking_until
 
 
-def is_probably_bot_echo(user_text: str) -> bool:
+def is_probably_bot_riko(user_text: str) -> bool:
     now = time.time()
     cleaned_user = clean_text(user_text)
 

@@ -58,13 +58,13 @@ async def main():
     reminder_manager = ReminderManager()
     local_tools = RealtimeLocalTools(reminder_manager)
 
-    logger.debug("Starting echo Assistant")
+    logger.debug("Starting Riko Assistant")
 
     ui_server = await start_ui_server()
-    await set_ui_status("listening", "Echo is listening")
+    await set_ui_status("listening", "Riko is listening")
 
-    system_instruction = """You are Echo, the user's personal voice assistant.
-Your wake name is Echo.
+    system_instruction = """You are Riko, the user's personal voice assistant.
+Your wake name is Riko.
 
 The current date and time may be provided inside the user's message.
 When the user asks today's date, current time, day, month, or year, use the provided current date/time.
@@ -97,7 +97,7 @@ Reply shortly and naturally."""
                             ),
                             language="en",
                             prompt=(
-                                "Echo voice assistant commands, reminders, alarms, "
+                                "Riko voice assistant commands, reminders, alarms, "
                                 "media controls, weather, news, and current information."
                             ),
                         ),
@@ -148,7 +148,7 @@ Reply shortly and naturally."""
     try:
         await runner.run(task)
     finally:
-        logger.debug("Stopping Echo Assistant cleanup")
+        logger.debug("Stopping Riko Assistant cleanup")
         local_tools.player.stop()
         reminder_task.cancel()
         with suppress(asyncio.CancelledError):

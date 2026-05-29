@@ -12,7 +12,7 @@ type AssistantStatus =
 
 export default function Home() {
   const [status, setStatus] = useState<AssistantStatus>("sleeping");
-  const [message, setMessage] = useState("Say Echo to wake me");
+  const [message, setMessage] = useState("Say Riko to wake me");
   const [showSplash, setShowSplash] = useState(true);
   const [wsConnected, setWsConnected] = useState(false);
 
@@ -51,7 +51,7 @@ export default function Home() {
   const titleText = useMemo(() => {
     switch (status) {
       case "sleeping":
-        return "Say “Echo” to wake me";
+        return "Say “Riko” to wake me";
       case "listening":
         return "I’m listening";
       case "thinking":
@@ -61,7 +61,7 @@ export default function Home() {
       case "playing":
         return "Playing media";
       default:
-        return "Echo AI Assistant";
+        return "Riko AI Assistant";
     }
   }, [status]);
 
@@ -98,7 +98,7 @@ export default function Home() {
             </div>
 
             <h1 className="mt-[7%] text-center text-[clamp(2rem,5vw,3.25rem)] font-extrabold tracking-wide">
-              Welcome to Echo
+              Welcome to Riko
             </h1>
             <p className="mt-3 max-w-[34rem] text-center text-[clamp(0.95rem,2vw,1.25rem)] text-slate-300">
               Your smart voice assistant for media, search, and conversation.
@@ -115,7 +115,7 @@ export default function Home() {
           {/* header */}
           <div className="flex w-full flex-col items-center gap-4">
             <div>
-              <h1 className="text-[clamp(1.45rem,3.4vw,2.45rem)] font-bold tracking-wide">Echo AI Assistant</h1>
+              <h1 className="text-[clamp(1.45rem,3.4vw,2.45rem)] font-bold tracking-wide">Riko AI Assistant</h1>
               <p className="mt-1 text-[clamp(0.78rem,1.35vw,0.95rem)] text-slate-300">
                 Circular smart display
               </p>
@@ -205,7 +205,7 @@ export default function Home() {
           <footer className="w-[86%] rounded-full border border-white/10 bg-slate-950/40 px-7 py-4 backdrop-blur-md">
             <p className="text-[clamp(0.9rem,1.8vw,1.05rem)] text-slate-200">
               <span className="font-semibold text-cyan-300">Try:</span>{" "}
-              “Echo, play Believer on YouTube”
+              “Riko, play Believer on YouTube”
             </p>
           </footer>
         </div>

@@ -3,7 +3,7 @@ import re
 from loguru import logger
 from tools.ui_state import set_ui_status
 from tools.wake_state import consume_if_awake, sleep_now
-from tools.audio_guard import is_bot_speaking, is_probably_bot_echo
+from tools.audio_guard import is_bot_speaking, is_probably_bot_riko
 from tools.audio_playback import stop_current_playback
 from pipecat.frames.frames import Frame, TranscriptionFrame, TTSTextFrame
 from pipecat.processors.frame_processor import FrameProcessor, FrameDirection
@@ -28,13 +28,13 @@ class WakeWordProcessor(FrameProcessor):
 
     def parse_wake_and_command(self, text: str):
         fallback_wake_words = [
-            "echo",
-            "hey echo",
-            "hello echo",
-            "ok echo",
-            "okay echo",
-            "he echo",
-            "the echo",
+            "riko",
+            "hey riko",
+            "hello riko",
+            "ok riko",
+            "okay riko",
+            "he riko",
+            "the riko",
         ]
 
         for wake in fallback_wake_words:
@@ -59,8 +59,8 @@ class WakeWordProcessor(FrameProcessor):
 
             wake, command_text = self.parse_wake_and_command(cleaned_text)
 
-            if is_probably_bot_echo(cleaned_text):
-                logger.debug(f"IGNORED BOT SPEAKER ECHO: {original_text}")
+            if is_probably_bot_riko(cleaned_text):
+                logger.debug(f"IGNORED BOT SPEAKER RIKO: {original_text}")
                 return
 
             if is_bot_speaking():
@@ -74,8 +74,8 @@ class WakeWordProcessor(FrameProcessor):
 
             if self.is_timeout():
                 self.awake = False
-                logger.debug("ECHO BACK TO SLEEP AFTER TIMEOUT")
-                await set_ui_status("sleeping", "Echo is sleeping")
+                logger.debug("RIKO BACK TO SLEEP AFTER TIMEOUT")
+                await set_ui_status("sleeping", "Riko is sleeping")
 
                 if not wake:
                     sleep_now()
@@ -91,7 +91,7 @@ class WakeWordProcessor(FrameProcessor):
                 if wake:
                     frame.metadata["explicit_wake_word"] = True
                     if not command_text:
-                        logger.debug("ECHO IS AWAKE. SAYING GREETING AND WAITING FOR COMMAND.")
+                        logger.debug("RIKO IS AWAKE. SAYING GREETING AND WAITING FOR COMMAND.")
                         await self.push_frame(
                             TTSTextFrame(
                                 text="Hello! How can I help you today?",
@@ -117,10 +117,10 @@ class WakeWordProcessor(FrameProcessor):
                     logger.debug(f"STT FALLBACK WAKE DETECTED: {cleaned_text}")
                     self.awake = True
                     self.last_command_time = time.time()
-                    await set_ui_status("listening", "Echo is listening")
+                    await set_ui_status("listening", "Riko is listening")
 
                     if not command_text:
-                        logger.debug("ECHO IS AWAKE. SAYING GREETING AND WAITING FOR COMMAND.")
+                        logger.debug("RIKO IS AWAKE. SAYING GREETING AND WAITING FOR COMMAND.")
                         await self.push_frame(
                             TTSTextFrame(
                                 text="Hello! How can I help today?",

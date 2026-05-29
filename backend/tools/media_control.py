@@ -233,7 +233,7 @@ class MediaCommandProcessor(FrameProcessor):
             "hey",
             "ok",
             "okay",
-            "echo",
+            "riko",
         )
         suffixes = (
             "please",

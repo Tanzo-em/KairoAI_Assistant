@@ -1,6 +1,6 @@
 # KairoAI Assistant
 
-KairoAI Assistant is a local realtime voice assistant named Echo. It uses the
+KairoAI Assistant is a local realtime voice assistant named Riko. It uses the
 OpenAI Realtime API for live speech input, turn detection, transcription,
 reasoning, and spoken responses, while keeping local tools for reminders,
 alarms, media playback, current information, and UI status updates.
@@ -8,7 +8,7 @@ alarms, media playback, current information, and UI status updates.
 The project has two parts:
 
 - `backend/` - Python realtime voice pipeline with microphone and speaker I/O.
-- `echo-ui/` - Next.js dashboard that shows the assistant connection and state.
+- `riko-ui/` - Next.js dashboard that shows the assistant connection and state.
 
 ## Features
 
@@ -80,7 +80,7 @@ WebSocket server at `ws://localhost:8765`.
 Open a second terminal from the repo root:
 
 ```bash
-cd echo-ui
+cd riko-ui
 npm install
 npm run dev
 ```
@@ -107,7 +107,7 @@ uv run python main.py
 Frontend:
 
 ```bash
-cd echo-ui
+cd riko-ui
 npm install
 npm run dev
 npm run build
