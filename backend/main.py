@@ -75,7 +75,8 @@ Use get_local_datetime for date or time questions.
 Use control_media for music and playback commands.
 Use set_reminder for alarm and reminder requests.
 Use get_current_info for weather, news, scores, prices, availability, and other current information.
-Reply shortly and naturally."""
+Reply shortly and naturally.
+Do not introduce your abilities or list commands unless the user asks what you can do."""
 
     realtime = OpenAIRealtime2Service(
         local_tools=local_tools,
@@ -96,16 +97,12 @@ Reply shortly and naturally."""
                                 "gpt-4o-transcribe",
                             ),
                             language="en",
-                            prompt=(
-                                "Riko voice assistant commands, reminders, alarms, "
-                                "media controls, weather, news, and current information."
-                            ),
                         ),
                         noise_reduction=events.InputAudioNoiseReduction(type="near_field"),
                         turn_detection=events.SemanticTurnDetection(
                             eagerness="auto",
                             create_response=False,
-                            interrupt_response=False,
+                            interrupt_response=True,
                         ),
                     ),
                     output=events.AudioOutput(
@@ -139,7 +136,7 @@ Reply shortly and naturally."""
     task = PipelineTask(
         pipeline,
         params=PipelineParams(
-            allow_interruptions=False,
+            allow_interruptions=True,
         ),
     )
 

@@ -64,6 +64,7 @@ export default function Home() {
         return "Riko AI Assistant";
     }
   }, [status]);
+  const mediaTitle = useMemo(() => formatMediaTitle(message), [message]);
 
   return (
     <main className="min-h-screen bg-[#050816] flex items-center justify-center overflow-hidden">
@@ -158,19 +159,22 @@ export default function Home() {
                 </>
               )}
 
-              <div
-                className={`relative grid h-[27vw] max-h-72 min-h-40 w-[27vw] max-w-72 min-w-40 place-items-center rounded-full shadow-[0_0_90px_rgba(59,130,246,0.45)] transition-all duration-500 ${orbClass(
-                  status
-                )} ${status === "speaking" ? "animate-pulse" : ""}`}
-              >
-                <div className="grid h-[62%] w-[62%] place-items-center rounded-full border border-white/10 bg-slate-950/75 backdrop-blur-xl">
-                  {status === "sleeping" && <Moon className="h-[42%] w-[42%]" />}
-                  {status === "listening" && <Mic className="h-[42%] w-[42%]" />}
-                  {status === "thinking" && <Brain className="h-[42%] w-[42%]" />}
-                  {status === "speaking" && <Volume2 className="h-[42%] w-[42%]" />}
-                  {status === "playing" && <Music className="h-[42%] w-[42%]" />}
+              {status === "playing" ? (
+                <VinylDisk title={mediaTitle} />
+              ) : (
+                <div
+                  className={`relative grid h-[27vw] max-h-72 min-h-40 w-[27vw] max-w-72 min-w-40 place-items-center rounded-full shadow-[0_0_90px_rgba(59,130,246,0.45)] transition-all duration-500 ${orbClass(
+                    status
+                  )} ${status === "speaking" ? "animate-pulse" : ""}`}
+                >
+                  <div className="grid h-[62%] w-[62%] place-items-center rounded-full border border-white/10 bg-slate-950/75 backdrop-blur-xl">
+                    {status === "sleeping" && <Moon className="h-[42%] w-[42%]" />}
+                    {status === "listening" && <Mic className="h-[42%] w-[42%]" />}
+                    {status === "thinking" && <Brain className="h-[42%] w-[42%]" />}
+                    {status === "speaking" && <Volume2 className="h-[42%] w-[42%]" />}
+                  </div>
                 </div>
-              </div>
+              )}
 
               {/* floating particles */}
               <div className="absolute -left-[24%] top-[12%] h-4 w-4 rounded-full bg-cyan-300/80 animate-bounce" />
@@ -230,6 +234,36 @@ function InfoCard({
       <b className="max-w-full truncate text-[clamp(0.95rem,1.8vw,1.15rem)] text-white">{value}</b>
     </div>
   );
+}
+
+function VinylDisk({ title }: { title: string }) {
+  return (
+    <div className="relative grid h-[34vw] max-h-80 min-h-48 w-[34vw] max-w-80 min-w-48 place-items-center">
+      <div className="absolute inset-0 rounded-full border border-white/15 shadow-[0_0_90px_rgba(244,63,94,0.35)] animate-[spin_3s_linear_infinite]">
+        <div
+          className="absolute inset-0 rounded-full"
+          style={{
+            background:
+              "repeating-radial-gradient(circle, #050505 0 7px, #151515 8px 10px, #050505 11px 15px), conic-gradient(from 20deg, rgba(255,255,255,0.2), transparent 18%, rgba(255,255,255,0.08) 30%, transparent 45%, rgba(255,255,255,0.16) 58%, transparent 74%)",
+          }}
+        />
+        <div className="absolute left-1/2 top-0 h-1/2 w-[2px] origin-bottom -translate-x-1/2 bg-white/12" />
+        <div className="absolute inset-[43%] rounded-full bg-slate-950" />
+      </div>
+
+      <div className="relative z-10 grid h-[42%] w-[42%] place-items-center rounded-full border border-rose-200/30 bg-gradient-to-br from-rose-500 via-fuchsia-500 to-cyan-400 p-[9%] text-white shadow-[0_0_36px_rgba(236,72,153,0.45)]">
+        <Music className="h-[25%] w-[25%] shrink-0" />
+        <span className="max-w-full overflow-hidden text-balance break-words text-center text-[clamp(0.72rem,1.55vw,1rem)] font-bold leading-tight">
+          {title}
+        </span>
+      </div>
+    </div>
+  );
+}
+
+function formatMediaTitle(message: string) {
+  const title = message.replace(/^playing\s*/i, "").trim();
+  return title || "Music";
 }
 
 function badgeClass(status: AssistantStatus) {

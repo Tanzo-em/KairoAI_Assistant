@@ -17,6 +17,11 @@ test_tts.py
 *.pyc
 __pycache__/
 
+# Frontend dependencies and build output
+node_modules/
+.next/
+**/.next/
+
 # Model artifacts
 **/models/
 

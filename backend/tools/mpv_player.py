@@ -423,6 +423,56 @@ class MPVPlayer:
             self.queue_name = None
             return False
 
+    def load_related_queue(self, seed_track: dict, audio_url: str | None = None) -> bool:
+        video_id = seed_track.get("videoId")
+
+        if not video_id:
+            return False
+
+        display_name = self.track_display_name(seed_track)
+        seed_track = dict(seed_track)
+
+        if audio_url:
+            seed_track["audio_url"] = audio_url
+
+        try:
+            ytmusic = self.get_youtube_music()
+            watch_playlist = ytmusic.get_watch_playlist(
+                videoId=video_id,
+                limit=25,
+                radio=True,
+            )
+            related_tracks = watch_playlist.get("tracks", [])
+        except Exception as e:
+            logger.error(f"Failed to load related queue for '{display_name}': {e}")
+            return False
+
+        queue = [seed_track]
+        seen_video_ids = {video_id}
+
+        for track in related_tracks:
+            track_video_id = track.get("videoId")
+
+            if (
+                not track_video_id
+                or track_video_id in seen_video_ids
+                or not track.get("isAvailable", True)
+            ):
+                continue
+
+            queue.append(track)
+            seen_video_ids.add(track_video_id)
+
+        if len(queue) <= 1:
+            logger.warning(f"Related queue for '{display_name}' had no follow-up tracks")
+            return False
+
+        self.queue = queue
+        self.queue_index = 0
+        self.queue_name = f"Radio from {display_name}"
+        logger.info(f"Loaded related queue: {self.queue_name} ({len(self.queue)} tracks)")
+        return True
+
     def play_queue_track(self, index: int, *, remember: bool = True) -> str:
         if not self.queue:
             return "I could not find a playlist."
@@ -532,6 +582,7 @@ class MPVPlayer:
                 return self.not_found_response(query)
 
             query = display_name
+            self.load_related_queue(track, audio_url)
 
         self._start_url(query, audio_url)
         self._remember_track(query, audio_url)

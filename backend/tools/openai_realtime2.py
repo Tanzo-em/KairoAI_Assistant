@@ -12,6 +12,7 @@ from pipecat.services.openai.realtime.llm import OpenAIRealtimeLLMService
 
 from tools.mpv_player import MPVPlayer
 from tools.reminder_manager import ReminderManager
+from tools.ui_state import set_ui_status
 from tools.web_search import ask_with_web_search
 
 
@@ -99,7 +100,9 @@ class RealtimeLocalTools:
 
     async def call(self, name: str, arguments: dict) -> str:
         if name == "control_media":
-            return await asyncio.to_thread(self._control_media, arguments)
+            result = await asyncio.to_thread(self._control_media, arguments)
+            await self._publish_media_status(arguments, result)
+            return result
         if name == "set_reminder":
             return await asyncio.to_thread(self._set_reminder, arguments)
         if name == "get_current_info":
@@ -108,6 +111,21 @@ class RealtimeLocalTools:
             return self._get_local_datetime()
 
         return f"Unknown tool: {name}"
+
+    async def _publish_media_status(self, arguments: dict, result: str):
+        action = str(arguments.get("action", "")).strip().lower()
+        result_text = result.strip()
+
+        if result_text.lower().startswith("playing"):
+            await set_ui_status("playing", result_text)
+            return
+
+        if action == "pause":
+            await set_ui_status("listening", "Music paused")
+            return
+
+        if action == "stop":
+            await set_ui_status("listening", "Music stopped")
 
     def _control_media(self, arguments: dict) -> str:
         action = str(arguments.get("action", "")).strip().lower()
@@ -198,6 +216,11 @@ class OpenAIRealtime2Service(OpenAIRealtimeLLMService):
         transcript = (evt.transcript or "").strip()
         decision = self._gate_transcript(transcript)
 
+        if decision.get("interrupt"):
+            logger.info(f"REALTIME INTERRUPTING BOT: transcript={transcript!r}")
+            await self._handle_interruption()
+            self._bot_speaking_until = 0.0
+
         if not decision["allowed"]:
             logger.info(f"REALTIME GATE IGNORED: {decision['reason']} transcript={transcript!r}")
             await self._delete_conversation_item(evt.item_id)
@@ -212,23 +235,57 @@ class OpenAIRealtime2Service(OpenAIRealtimeLLMService):
 
     def _gate_transcript(self, transcript: str) -> dict:
         if not transcript:
-            return {"allowed": False, "reason": "empty_transcript", "text": ""}
+            return {"allowed": False, "reason": "empty_transcript", "text": "", "interrupt": False}
 
         stripped = self._strip_wake_phrase(transcript)
         has_wake = stripped != transcript.strip()
 
+        if self._is_transcription_prompt_leak(stripped):
+            return {
+                "allowed": False,
+                "reason": "transcription_prompt_leak",
+                "text": "",
+                "interrupt": False,
+            }
+
         if self._is_bot_speaking():
-            return {"allowed": False, "reason": "bot_speaking", "text": transcript}
+            if not has_wake:
+                return {
+                    "allowed": False,
+                    "reason": "bot_speaking",
+                    "text": transcript,
+                    "interrupt": False,
+                }
+
+            if not stripped:
+                return {
+                    "allowed": False,
+                    "reason": "wake_interrupted_bot",
+                    "text": "",
+                    "interrupt": True,
+                }
+
+            return {
+                "allowed": True,
+                "reason": "wake_interruption_command",
+                "text": stripped,
+                "interrupt": True,
+            }
 
         if self.local_tools.player.is_audible() and not has_wake:
-            return {"allowed": False, "reason": "music_playing_without_wake", "text": transcript}
+            return {
+                "allowed": False,
+                "reason": "music_playing_without_wake",
+                "text": transcript,
+                "interrupt": False,
+            }
 
         text = stripped if has_wake else transcript
         if not text:
-            return {"allowed": False, "reason": "wake_only", "text": ""}
+            return {"allowed": False, "reason": "wake_only", "text": "", "interrupt": False}
 
         reason = "wake_command" if has_wake else "normal_turn"
-        return {"allowed": True, "reason": reason, "text": text}
+        return {"allowed": True, "reason": reason, "text": text, "interrupt": False}
 
     def _strip_wake_phrase(self, transcript: str) -> str:
         text = transcript.strip()
@@ -239,6 +296,14 @@ class OpenAIRealtime2Service(OpenAIRealtimeLLMService):
             flags=re.IGNORECASE,
         )
         return text.strip()
+
+    def _is_transcription_prompt_leak(self, text: str) -> bool:
+        normalized = re.sub(r"[^a-z0-9\s]", " ", text.lower())
+        normalized = re.sub(r"\s+", " ", normalized).strip()
+        return normalized in {
+            "voice assistant commands reminders alarms media controls weather news and current information",
+            "riko voice assistant commands reminders alarms media controls weather news and current information",
+        }
 
     def _is_bot_speaking(self) -> bool:
         return time.time() < self._bot_speaking_until
