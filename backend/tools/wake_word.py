@@ -9,6 +9,22 @@ from pipecat.frames.frames import Frame, TranscriptionFrame, TTSTextFrame
 from pipecat.processors.frame_processor import FrameProcessor, FrameDirection
 
 
+WAKE_WORD_ALIASES = (
+    "riko",
+    "rico",
+    "ricko",
+    "rikko",
+    "reeko",
+    "reico",
+    "reiko",
+    "ryko",
+    "riku",
+    "biko",
+    "viko",
+)
+WAKE_PREFIXES = ("", "hey ", "hello ", "ok ", "okay ", "he ", "the ")
+
+
 class WakeWordProcessor(FrameProcessor):
     def __init__(self):
         super().__init__()
@@ -28,13 +44,9 @@ class WakeWordProcessor(FrameProcessor):
 
     def parse_wake_and_command(self, text: str):
         fallback_wake_words = [
-            "riko",
-            "hey riko",
-            "hello riko",
-            "ok riko",
-            "okay riko",
-            "he riko",
-            "the riko",
+            f"{prefix}{alias}".strip()
+            for alias in WAKE_WORD_ALIASES
+            for prefix in WAKE_PREFIXES
         ]
 
         for wake in fallback_wake_words:

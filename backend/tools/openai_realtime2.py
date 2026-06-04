@@ -16,6 +16,22 @@ from tools.ui_state import set_ui_status
 from tools.web_search import ask_with_web_search
 
 
+WAKE_WORD_ALIASES = (
+    "riko",
+    "rico",
+    "ricko",
+    "rikko",
+    "reeko",
+    "reico",
+    "reiko",
+    "ryko",
+    "riku",
+    "biko",
+    "viko",
+)
+WAKE_WORD_PATTERN = "|".join(re.escape(alias) for alias in WAKE_WORD_ALIASES)
+
+
 class RealtimeLocalTools:
     def __init__(self, reminder_manager: ReminderManager):
         self.player = MPVPlayer()
@@ -290,7 +306,7 @@ class OpenAIRealtime2Service(OpenAIRealtimeLLMService):
     def _strip_wake_phrase(self, transcript: str) -> str:
         text = transcript.strip()
         text = re.sub(
-            r"^\s*(?:hey\s+|hello\s+|ok\s+|okay\s+)?riko[\s,.:;!?-]*",
+            rf"^\s*(?:hey\s+|hello\s+|ok\s+|okay\s+)?(?:{WAKE_WORD_PATTERN})[\s,.:;!?-]*",
             "",
             text,
             flags=re.IGNORECASE,
